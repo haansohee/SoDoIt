@@ -14,11 +14,11 @@ extension Category {
         return NSFetchRequest<Category>(entityName: "Category")
     }
 
-    @NSManaged public var id: UUID?
-    @NSManaged public var name: String?
+    @NSManaged public var id: UUID
+    @NSManaged public var name: String
     @NSManaged public var colorHex: String?
     @NSManaged public var iconName: String?
-    @NSManaged public var createdAt: Date?
+    @NSManaged public var createdAt: Date
     @NSManaged public var todoItems: NSSet?
 }
 
@@ -40,10 +40,6 @@ extension Category {
 
 extension Category: Identifiable {
 
-    var wrappedName: String {
-        name ?? ""
-    }
-
     var wrappedColorHex: String {
         colorHex ?? "#007AFF"
     }
@@ -52,13 +48,9 @@ extension Category: Identifiable {
         iconName ?? "folder.fill"
     }
 
-    var wrappedId: UUID {
-        id ?? UUID()
-    }
-
     var todoItemsArray: [TodoItem] {
         let set = todoItems as? Set<TodoItem> ?? []
-        return set.sorted { ($0.createdAt ?? Date()) < ($1.createdAt ?? Date()) }
+        return set.sorted { $0.createdAt < $1.createdAt }
     }
 
     var activeTodoCount: Int {

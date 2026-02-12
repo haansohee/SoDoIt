@@ -14,33 +14,21 @@ extension TodoItem {
         return NSFetchRequest<TodoItem>(entityName: "TodoItem")
     }
 
-    @NSManaged public var id: UUID?
-    @NSManaged public var title: String?
+    @NSManaged public var id: UUID
+    @NSManaged public var title: String
     @NSManaged public var memo: String?
     @NSManaged public var dueDate: Date?
     @NSManaged public var priority: Int16
     @NSManaged public var isCompleted: Bool
     @NSManaged public var completedAt: Date?
-    @NSManaged public var createdAt: Date?
+    @NSManaged public var createdAt: Date
     @NSManaged public var category: Category?
 }
 
 extension TodoItem: Identifiable {
 
-    var wrappedTitle: String {
-        title ?? ""
-    }
-
     var wrappedMemo: String {
         memo ?? ""
-    }
-
-    var wrappedCreatedAt: Date {
-        createdAt ?? Date()
-    }
-
-    var wrappedId: UUID {
-        id ?? UUID()
     }
 
     var priorityLevel: Priority {
