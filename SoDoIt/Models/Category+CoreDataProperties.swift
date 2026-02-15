@@ -16,8 +16,8 @@ extension Category {
 
     @NSManaged public var id: UUID
     @NSManaged public var name: String
-    @NSManaged public var colorHex: String?
-    @NSManaged public var iconName: String?
+    @NSManaged public var colorHex: String
+    @NSManaged public var iconName: String
     @NSManaged public var createdAt: Date
     @NSManaged public var todoItems: NSSet?
 }
@@ -39,14 +39,6 @@ extension Category {
 }
 
 extension Category: Identifiable {
-
-    var wrappedColorHex: String {
-        colorHex ?? "#007AFF"
-    }
-
-    var wrappedIconName: String {
-        iconName ?? "folder.fill"
-    }
 
     var todoItemsArray: [TodoItem] {
         let set = todoItems as? Set<TodoItem> ?? []
