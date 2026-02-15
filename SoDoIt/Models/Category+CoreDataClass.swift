@@ -11,4 +11,9 @@ import CoreData
 @objc(Category)
 public class Category: NSManagedObject {
 
+    nonisolated public override func awakeFromInsert() {
+        super.awakeFromInsert()
+        setPrimitiveValue(UUID(), forKey: "id")
+        setPrimitiveValue(Date(), forKey: "createdAt")
+    }
 }

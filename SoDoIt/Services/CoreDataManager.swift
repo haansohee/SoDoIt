@@ -17,31 +17,25 @@ final class CoreDataManager {
         let manager = CoreDataManager(inMemory: true)
         let context = manager.container.viewContext
 
-        // 샘플 카테고리
+        // 샘플 카테고리 (id, createdAt은 awakeFromInsert에서 자동 설정)
         let workCategory = Category(context: context)
-        workCategory.id = UUID()
         workCategory.name = "업무"
         workCategory.colorHex = "#FF3B30"
         workCategory.iconName = "briefcase.fill"
-        workCategory.createdAt = Date()
 
         let personalCategory = Category(context: context)
-        personalCategory.id = UUID()
         personalCategory.name = "개인"
         personalCategory.colorHex = "#34C759"
         personalCategory.iconName = "person.fill"
-        personalCategory.createdAt = Date()
 
-        // 샘플 할 일
+        // 샘플 할 일 (id, createdAt은 awakeFromInsert에서 자동 설정)
         for i in 0..<5 {
             let todo = TodoItem(context: context)
-            todo.id = UUID()
             todo.title = "샘플 할 일 \(i + 1)"
             todo.memo = i % 2 == 0 ? "메모가 있는 할 일입니다." : nil
             todo.priority = Int16(i % 3)
             todo.isCompleted = i > 2
             todo.completedAt = i > 2 ? Date() : nil
-            todo.createdAt = Date().addingTimeInterval(Double(-i) * 3600)
             todo.dueDate = i < 3 ? Calendar.current.date(byAdding: .day, value: i, to: Date()) : nil
             todo.category = i % 2 == 0 ? workCategory : personalCategory
         }
