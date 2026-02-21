@@ -8,32 +8,16 @@
 import SwiftUI
 
 struct TodoListView: View {
-    @FetchRequest(
-        sortDescriptors: [
-            NSSortDescriptor(keyPath: \TodoItem.isCompleted, ascending: true),
-            NSSortDescriptor(keyPath: \TodoItem.priority, ascending: true),
-            NSSortDescriptor(keyPath: \TodoItem.createdAt, ascending: false)
-        ]
-    ) private var todos: FetchedResults<TodoItem>
+    @State private var todoListViewModel: TodoListViewModel
     
-    private let repository = TodoRepository()
-    
-    private var splitIndex: Int {
-        todos.firstIndex { $0.isCompleted } ?? todos.endIndex
-    }
-    
-    private var activeTodos: FetchedResults<TodoItem>.SubSequence {
-        todos.prefix(upTo: splitIndex)
-    }
-    
-    private var completedTodos: FetchedResults<TodoItem>.SubSequence {
-        todos.suffix(from: splitIndex)
+    init(viewModel: TodoListViewModel = TodoListViewModel()) {
+        _todoListViewModel = State(wrappedValue: viewModel)
     }
     
     var body: some View {
         NavigationStack {
             Group {
-                if todos.isEmpty {
+                if todoListViewModel.todos.isEmpty {
                     ContentUnavailableView(
                         "할 일이 없습니다",
                         systemImage: "checklist",
@@ -59,8 +43,8 @@ struct TodoListView: View {
     // MARK: - 할 일 목록
     private var todoList: some View {
         List {
-            todoSection(title: "진행 중", todos: activeTodos)
-            todoSection(title: "완료됨", todos: completedTodos)
+            todoSection(title: "진행 중", todos: todoListViewModel.activeTodos)
+            todoSection(title: "완료됨", todos: todoListViewModel.completedTodos)
         }
     }
     
@@ -85,7 +69,7 @@ struct TodoListView: View {
     private func toggleButton(for todo: TodoItem) -> some View {
         Button {
             withAnimation {
-                repository.toggleTodoCompletion(todo)
+                todoListViewModel.toggleCompletion(todo)
             }
         } label: {
             Image(systemName: todo.isCompleted ? "arrow.uturn.backward" : "checkmark")
@@ -96,7 +80,7 @@ struct TodoListView: View {
     private func deleteButton(for todo: TodoItem) -> some View {
         Button(role: .destructive) {
             withAnimation {
-                repository.deleteTodo(todo)
+                todoListViewModel.delete(todo)
             }
         } label: {
             Image(systemName: "trash")
