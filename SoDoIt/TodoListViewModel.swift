@@ -7,6 +7,7 @@
 
 import Foundation
 import CoreData
+import Observation
 
 @Observable
 final class TodoListViewModel: NSObject, NSFetchedResultsControllerDelegate {
@@ -15,13 +16,14 @@ final class TodoListViewModel: NSObject, NSFetchedResultsControllerDelegate {
     private let fetchedResultsController: NSFetchedResultsController<TodoItem>
     private let repository: TodoRepository
     
+    private var splitIndex: Int {
+        todos.firstIndex { $0.isCompleted } ?? todos.endIndex
+    }
     var activeTodos: [TodoItem] {
-        let splitIndex = todos.firstIndex { $0.isCompleted } ?? todos.endIndex
-        return Array(todos.prefix(upTo: splitIndex))
+        Array(todos.prefix(upTo: splitIndex))
     }
     var completedTodos: [TodoItem] {
-        let splitIndex = todos.firstIndex { $0.isCompleted } ?? todos.endIndex
-        return Array(todos.suffix(from: splitIndex))
+        Array(todos.suffix(from: splitIndex))
     }
     
     init(
@@ -48,13 +50,14 @@ final class TodoListViewModel: NSObject, NSFetchedResultsControllerDelegate {
             try fetchedResultsController.performFetch()
             todos = fetchedResultsController.fetchedObjects ?? []
         } catch {
+            NSLog("TodoListViewModel fetch 실패: \(error)")
             print("TodoListViewModel fetch 실패: \(error)")
         }
     }
     
     /// preview용 편의 이니셜라이저
     convenience init(preview: Bool) {
-        self.init(context: CoreDataManager.shared.viewContext)
+        self.init(context: CoreDataManager.preview.viewContext)
     }
     
     // MARK: - Actions
@@ -69,7 +72,7 @@ final class TodoListViewModel: NSObject, NSFetchedResultsControllerDelegate {
     
     // MARK: - NSFetchedResultsControllerDelegate
     
-    func controllerDidChangeContent(_ controller: NSFetchedResultsController<any NSFetchRequestResult>) {
-        todos = fetchedResultsController.fetchedObjects ?? []
+    func controllerDidChangeContent(_ controller: NSFetchedResultsController<NSFetchRequestResult>) {
+        todos = controller.fetchedObjects as? [TodoItem] ?? []
     }
 }

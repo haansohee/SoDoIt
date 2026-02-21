@@ -8,7 +8,11 @@
 import SwiftUI
 
 struct TodoListView: View {
-    @State private var todoListViewModel = TodoListViewModel()
+    @State private var todoListViewModel: TodoListViewModel
+    
+    init(viewModel: TodoListViewModel = TodoListViewModel()) {
+        _todoListViewModel = State(wrappedValue: viewModel)
+    }
     
     var body: some View {
         NavigationStack {
