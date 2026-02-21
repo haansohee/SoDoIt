@@ -18,12 +18,16 @@ struct TodoListView: View {
     
     private let repository = TodoRepository()
     
-    private var activeTodos: [TodoItem] {
-        todos.filter { !$0.isCompleted }
+    private var splitIndex: Int {
+        todos.firstIndex { $0.isCompleted } ?? todos.endIndex
     }
     
-    private var completedTodos: [TodoItem] {
-        todos.filter { $0.isCompleted }
+    private var activeTodos: FetchedResults<TodoItem>.SubSequence {
+        todos.prefix(upTo: splitIndex)
+    }
+    
+    private var completedTodos: FetchedResults<TodoItem>.SubSequence {
+        todos.suffix(from: splitIndex)
     }
     
     var body: some View {
@@ -55,31 +59,23 @@ struct TodoListView: View {
     // MARK: - 할 일 목록
     private var todoList: some View {
         List {
-            if !activeTodos.isEmpty {
-                Section("진행 중") {
-                    ForEach(activeTodos) { todo in
-                        TodoRowView(todo: todo)
-                            .swipeActions(edge: .leading) {
-                                toggleButton(for: todo)
-                            }
-                            .swipeActions(edge: .trailing) {
-                                deleteButton(for: todo)
-                            }
-                    }
-                }
-            }
-            
-            if !completedTodos.isEmpty {
-                Section("완료됨") {
-                    ForEach(completedTodos) { todo in
-                        TodoRowView(todo: todo)
-                            .swipeActions(edge: .leading) {
-                                toggleButton(for: todo)
-                            }
-                            .swipeActions(edge: .trailing) {
-                                deleteButton(for: todo)
-                            }
-                    }
+            todoSection(title: "진행 중", todos: activeTodos)
+            todoSection(title: "완료됨", todos: completedTodos)
+        }
+    }
+    
+    @ViewBuilder
+    private func todoSection<T: RandomAccessCollection>(title: String, todos: T) -> some View where T.Element == TodoItem {
+        if !todos.isEmpty {
+            Section(title) {
+                ForEach(todos) { todo in
+                    TodoRowView(todo: todo)
+                        .swipeActions(edge: .leading) {
+                            toggleButton(for: todo)
+                        }
+                        .swipeActions(edge: .trailing) {
+                            deleteButton(for: todo)
+                        }
                 }
             }
         }

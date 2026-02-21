@@ -72,7 +72,13 @@ struct TodoRowView: View {
 #Preview {
     let context = CoreDataManager.preview.viewContext
     let request = TodoItem.fetchRequest()
-    let items = try! context.fetch(request)
+    let items: [TodoItem]
+    
+    do{
+        items = try context.fetch(request)
+    } catch {
+        items = []
+    }
     
     return List {
         ForEach(items) { item in
