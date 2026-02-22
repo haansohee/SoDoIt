@@ -10,7 +10,7 @@ import CoreData
 import Observation
 
 @Observable
-final class TodoListViewModel: NSObject, NSFetchedResultsControllerDelegate {
+final class TodoListViewModel: NSObject, NSFetchedResultsControllerDelegate {    
     private(set) var todos: [TodoItem] = []
     
     private let fetchedResultsController: NSFetchedResultsController<TodoItem>
