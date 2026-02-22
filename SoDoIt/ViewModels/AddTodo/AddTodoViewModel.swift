@@ -70,7 +70,7 @@ final class AddTodoViewModel: NSObject, NSFetchedResultsControllerDelegate {
     
     // MARK: Actions
     
-    func save() -> Bool {
+    func save() throws {
         do {
             try repository.createTodo(
                 title: formState.title.trimmingCharacters(in: .whitespacesAndNewlines),
@@ -79,10 +79,9 @@ final class AddTodoViewModel: NSObject, NSFetchedResultsControllerDelegate {
                 priority: formState.priority,
                 category: formState.selectedCategory
             )
-            return true
         } catch {
             showSaveError = true
-            return false
+            throw error
         }
     }
     

@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import OSLog
 
 private enum Field: Hashable {
     case title, memo
@@ -41,8 +42,11 @@ struct AddTodoView: View {
                 }
                 ToolbarItem(placement: .confirmationAction) {
                     Button("추가") {
-                        if addTodoViewModel.save() {
+                        do {
+                            try addTodoViewModel.save()
                             dismiss()
+                        } catch {
+                            Logger(subsystem: Bundle.main.bundleIdentifier!, category: "AddTodoView").error("할 일 저장 실패: \(error)")
                         }
                     }
                     .disabled(!addTodoViewModel.formState.canSave)
