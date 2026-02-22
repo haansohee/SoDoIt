@@ -7,8 +7,13 @@
 
 import SwiftUI
 
+private enum Field: Hashable {
+    case title, memo
+}
+
 struct AddTodoView: View {
     @Environment(\.dismiss) private var dismiss
+    @FocusState private var focusedField: Field?
     @State private var addTodoViewModel: AddTodoViewModel
     
     init(viewModel: AddTodoViewModel = AddTodoViewModel()){
@@ -25,10 +30,7 @@ struct AddTodoView: View {
                 categorySection
             }
             .onTapGesture {
-                UIApplication.shared.sendAction(#selector(UIResponder.resignFirstResponder),
-                                                to: nil,
-                                                from: nil,
-                                                for: nil)
+                focusedField = nil
             }
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
@@ -52,6 +54,7 @@ struct AddTodoView: View {
     private var titleSection: some View {
         Section {
             TextField("할 일을 입력하세요", text: $addTodoViewModel.formState.title)
+                .focused($focusedField, equals: .title)
         } header: {
             Text("제목")
         }
@@ -61,6 +64,7 @@ struct AddTodoView: View {
     private var memoSection: some View {
         Section {
             TextField("메모를 입력하세요", text: $addTodoViewModel.formState.memo)
+                .focused($focusedField, equals: .memo)
         } header: {
             Text("메모")
         }

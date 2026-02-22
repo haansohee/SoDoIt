@@ -8,6 +8,7 @@
 import Foundation
 import CoreData
 import Observation
+import OSLog
 
 struct TodoFormState {
     var title: String = ""
@@ -36,9 +37,9 @@ final class AddTodoViewModel: NSObject, NSFetchedResultsControllerDelegate {
     
     init(
         context: NSManagedObjectContext = CoreDataManager.shared.viewContext,
-        repository: TodoRepository = TodoRepository()
+        repository: TodoRepository? = nil
     ) {
-        self.repository = repository
+        self.repository = repository ?? TodoRepository(context: context)
         
         let request: NSFetchRequest<Category> = Category.fetchRequest()
         request.sortDescriptors = [
@@ -57,7 +58,7 @@ final class AddTodoViewModel: NSObject, NSFetchedResultsControllerDelegate {
             try fetchedResultsController.performFetch()
             categories = fetchedResultsController.fetchedObjects ?? []
         } catch {
-            print("AddTodoViewModel 카테고리 fetch 실패: \(error)")
+            Logger(subsystem: Bundle.main.bundleIdentifier!, category: "AddTodoViewModel").error("AddTodoViewModel 카테고리 fetch 실패: \(error)")
         }
     }
     

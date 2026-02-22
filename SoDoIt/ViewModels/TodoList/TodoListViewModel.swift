@@ -28,9 +28,9 @@ final class TodoListViewModel: NSObject, NSFetchedResultsControllerDelegate {
     
     init(
         context: NSManagedObjectContext = CoreDataManager.shared.viewContext,
-        repository: TodoRepository = TodoRepository()
+        repository: TodoRepository? = nil
     ) {
-        self.repository = repository
+        self.repository = repository ?? TodoRepository(context: context)
         let request: NSFetchRequest<TodoItem> = TodoItem.fetchRequest()
         request.sortDescriptors = [
             NSSortDescriptor(keyPath: \TodoItem.isCompleted, ascending: true),
