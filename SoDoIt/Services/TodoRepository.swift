@@ -9,6 +9,12 @@ import Foundation
 import CoreData
 
 final class TodoRepository {
+    private let context: NSManagedObjectContext
+
+    init(context: NSManagedObjectContext = CoreDataManager.shared.viewContext) {
+        self.context = context
+    }
+
     // MARK: - TodoItem CRUD
     @discardableResult
     func createTodo(
@@ -17,17 +23,22 @@ final class TodoRepository {
         dueDate: Date? = nil,
         priority: Priority = .medium,
         category: Category? = nil
-    ) -> TodoItem {
-        let todo = TodoItem(context: CoreDataManager.shared.viewContext)
+    ) throws -> TodoItem {
+        let todo = TodoItem(context: context)
         todo.title = title
         todo.memo = memo
         todo.dueDate = dueDate
         todo.priority = priority.rawValue
         todo.category = category
-        CoreDataManager.shared.save()
+        do {
+            try save()
+        } catch {
+            context.rollback()
+            throw error
+        }
         return todo
     }
-    
+
     func updateTodo(
         _ todo: TodoItem,
         title: String,
@@ -41,16 +52,23 @@ final class TodoRepository {
         todo.dueDate = dueDate
         todo.priority = priority.rawValue
         todo.category = category
-        CoreDataManager.shared.save()
+        do { try save() } catch { print("CoreData 저장 실패: \(error)") }
     }
-    
+
     func toggleTodoCompletion(_ todo: TodoItem) {
         todo.isCompleted.toggle()
         todo.completedAt = todo.isCompleted ? Date() : nil
-        CoreDataManager.shared.save()
+        do { try save() } catch { print("CoreData 저장 실패: \(error)") }
     }
-    
+
     func deleteTodo(_ todo: TodoItem) {
-        CoreDataManager.shared.viewContext.delete(todo)
-        CoreDataManager.shared.save()
-    }}
+        context.delete(todo)
+        do { try save() } catch { print("CoreData 저장 실패: \(error)") }
+    }
+
+    // MARK: - Private
+    private func save() throws {
+        guard context.hasChanges else { return }
+        try context.save()
+    }
+}

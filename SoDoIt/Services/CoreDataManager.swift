@@ -71,16 +71,4 @@ final class CoreDataManager {
         container.viewContext.automaticallyMergesChangesFromParent = true
         container.viewContext.mergePolicy = NSMergePolicy.mergeByPropertyObjectTrump
     }
-    
-    // MARK: - Save    
-    func save() {
-        let context = viewContext
-        guard context.hasChanges else { return }
-        
-        do {
-            try context.save()
-        } catch {
-            print("CoreData 저장 실패: \(error)")
-        }
-    }
 }

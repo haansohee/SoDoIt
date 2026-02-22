@@ -9,6 +9,7 @@ import SwiftUI
 
 struct TodoListView: View {
     @State private var todoListViewModel: TodoListViewModel
+    @State private var showingAddTodo = false
     
     init(viewModel: TodoListViewModel = TodoListViewModel()) {
         _todoListViewModel = State(wrappedValue: viewModel)
@@ -28,10 +29,13 @@ struct TodoListView: View {
                 }
             }
             .navigationTitle("할 일")
+            .sheet(isPresented: $showingAddTodo) {
+                AddTodoView()
+            }
             .toolbar {
                 ToolbarItem(placement: .topBarTrailing) {
                     Button {
-                        // TODO: AddTodoView 연결하기
+                        showingAddTodo = true
                     } label: {
                         Image(systemName: "plus")
                     }
