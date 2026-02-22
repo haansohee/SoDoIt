@@ -41,15 +41,21 @@ struct AddTodoView: View {
                 }
                 ToolbarItem(placement: .confirmationAction) {
                     Button("추가") {
-                        addTodoViewModel.save()
-                        dismiss()
+                        if addTodoViewModel.save() {
+                            dismiss()
+                        }
                     }
                     .disabled(!addTodoViewModel.formState.canSave)
                 }
             }
         }
+        .alert("저장 실패", isPresented: $addTodoViewModel.showSaveError) {
+            Button("확인", role: .cancel) { }
+        } message: {
+            Text("할 일을 저장하지 못했습니다. 다시 시도해 주세요.")
+        }
     }
-    
+
     // MARK: - Title Section
     private var titleSection: some View {
         Section {

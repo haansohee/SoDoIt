@@ -23,14 +23,19 @@ final class TodoRepository {
         dueDate: Date? = nil,
         priority: Priority = .medium,
         category: Category? = nil
-    ) -> TodoItem {
+    ) throws -> TodoItem {
         let todo = TodoItem(context: context)
         todo.title = title
         todo.memo = memo
         todo.dueDate = dueDate
         todo.priority = priority.rawValue
         todo.category = category
-        save()
+        do {
+            try save()
+        } catch {
+            context.rollback()
+            throw error
+        }
         return todo
     }
 
@@ -47,27 +52,23 @@ final class TodoRepository {
         todo.dueDate = dueDate
         todo.priority = priority.rawValue
         todo.category = category
-        save()
+        do { try save() } catch { print("CoreData 저장 실패: \(error)") }
     }
 
     func toggleTodoCompletion(_ todo: TodoItem) {
         todo.isCompleted.toggle()
         todo.completedAt = todo.isCompleted ? Date() : nil
-        save()
+        do { try save() } catch { print("CoreData 저장 실패: \(error)") }
     }
 
     func deleteTodo(_ todo: TodoItem) {
         context.delete(todo)
-        save()
+        do { try save() } catch { print("CoreData 저장 실패: \(error)") }
     }
 
     // MARK: - Private
-    private func save() {
+    private func save() throws {
         guard context.hasChanges else { return }
-        do {
-            try context.save()
-        } catch {
-            print("CoreData 저장 실패: \(error)")
-        }
+        try context.save()
     }
 }

@@ -19,7 +19,7 @@ struct TodoFormState {
     var selectedCategory: Category?
     
     var canSave: Bool {
-        !title.trimmingCharacters(in: .whitespaces).isEmpty
+        !title.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty
     }
 }
 
@@ -27,7 +27,8 @@ struct TodoFormState {
 @Observable
 final class AddTodoViewModel: NSObject, NSFetchedResultsControllerDelegate {
     var formState = TodoFormState()
-    
+    var showSaveError = false
+
     private(set) var categories: [Category] = []
     
     private let fetchedResultsController: NSFetchedResultsController<Category>
@@ -69,14 +70,20 @@ final class AddTodoViewModel: NSObject, NSFetchedResultsControllerDelegate {
     
     // MARK: Actions
     
-    func save() {
-        repository.createTodo(
-            title: formState.title.trimmingCharacters(in: .whitespaces),
-            memo: formState.memo.isEmpty ? nil : formState.memo,
-            dueDate: formState.hasDueDate ? formState.dueDate : nil,
-            priority: formState.priority,
-            category: formState.selectedCategory
-        )
+    func save() -> Bool {
+        do {
+            try repository.createTodo(
+                title: formState.title.trimmingCharacters(in: .whitespacesAndNewlines),
+                memo: formState.memo.isEmpty ? nil : formState.memo,
+                dueDate: formState.hasDueDate ? formState.dueDate : nil,
+                priority: formState.priority,
+                category: formState.selectedCategory
+            )
+            return true
+        } catch {
+            showSaveError = true
+            return false
+        }
     }
     
     // MARK: - NSFetchedResultsControllerDelegate
