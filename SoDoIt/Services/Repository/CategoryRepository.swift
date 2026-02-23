@@ -40,11 +40,16 @@ final class CategoryRepository {
         name: String,
         colorHex: String,
         iconName: String
-    ) {
+    ) throws {
         category.name = name
         category.colorHex = colorHex
         category.iconName = iconName
-        do { try save() } catch { print("CoreData 저장 실패: \(error)") }
+        do {
+            try save()
+        } catch {
+            context.rollback()
+            throw error
+        }
     }
 
     func deleteCategory(_ category: Category) {

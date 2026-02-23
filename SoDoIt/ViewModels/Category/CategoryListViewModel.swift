@@ -58,8 +58,8 @@ final class CategoryListViewModel: NSObject, NSFetchedResultsControllerDelegate 
         name: String,
         colorHex: String,
         iconName: String
-    ) {
-        repository.updateCategory(category, name: name, colorHex: colorHex, iconName: iconName)
+    ) throws {
+        try repository.updateCategory(category, name: name, colorHex: colorHex, iconName: iconName)
     }
 
     // MARK: - NSFetchedResultsControllerDelegate
