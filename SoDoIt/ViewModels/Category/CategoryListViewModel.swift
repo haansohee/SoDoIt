@@ -12,6 +12,7 @@ import Observation
 @Observable
 final class CategoryListViewModel: NSObject, NSFetchedResultsControllerDelegate {
     private(set) var categories: [Category] = []
+    var showError = false
 
     private let fetchedResultsController: NSFetchedResultsController<Category>
     private let repository: CategoryRepository
@@ -49,8 +50,12 @@ final class CategoryListViewModel: NSObject, NSFetchedResultsControllerDelegate 
 
     // MARK: - Actions
 
-    func deleteCategory(_ category: Category) throws {
-        try repository.deleteCategory(category)
+    func deleteCategory(_ category: Category) {
+        do {
+            try repository.deleteCategory(category)
+        } catch {
+            showError = true
+        }
     }
 
     func updateCategory(
@@ -58,8 +63,12 @@ final class CategoryListViewModel: NSObject, NSFetchedResultsControllerDelegate 
         name: String,
         colorHex: String,
         iconName: String
-    ) throws {
-        try repository.updateCategory(category, name: name, colorHex: colorHex, iconName: iconName)
+    ) {
+        do {
+            try repository.updateCategory(category, name: name, colorHex: colorHex, iconName: iconName)
+        } catch {
+            showError = true
+        }
     }
 
     // MARK: - NSFetchedResultsControllerDelegate
