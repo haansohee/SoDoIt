@@ -34,13 +34,14 @@ final class AddCategoryViewModel {
     }
 
     /// preview용 편의 이니셜라이저
-    convenience init(preview: Bool) {
+    convenience init(preview _: Bool) {
         self.init(context: CoreDataManager.preview.viewContext)
     }
 
     // MARK: - Actions
 
     func save() throws {
+        showSaveError = false
         do {
             try repository.createCategory(
                 name: formState.name.trimmingCharacters(in: .whitespacesAndNewlines),

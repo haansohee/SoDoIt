@@ -43,7 +43,7 @@ final class CategoryListViewModel: NSObject, NSFetchedResultsControllerDelegate 
     }
 
     /// preview용 편의 이니셜라이저
-    convenience init(preview: Bool) {
+    convenience init(preview _: Bool) {
         self.init(context: CoreDataManager.preview.viewContext)
     }
 
