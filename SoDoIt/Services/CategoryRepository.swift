@@ -21,12 +21,17 @@ final class CategoryRepository {
         name: String,
         colorHex: String = "#007AFF",
         iconName: String = "folder.fill"
-    ) -> Category {
+    ) throws -> Category {
         let category = Category(context: context)
         category.name = name
         category.colorHex = colorHex
         category.iconName = iconName
-        save()
+        do {
+            try save()
+        } catch {
+            context.rollback()
+            throw error
+        }
         return category
     }
 
@@ -39,21 +44,17 @@ final class CategoryRepository {
         category.name = name
         category.colorHex = colorHex
         category.iconName = iconName
-        save()
+        do { try save() } catch { print("CoreData 저장 실패: \(error)") }
     }
 
     func deleteCategory(_ category: Category) {
         context.delete(category)
-        save()
+        do { try save() } catch { print("CoreData 저장 실패: \(error)") }
     }
 
     // MARK: - Private
-    private func save() {
+    private func save() throws {
         guard context.hasChanges else { return }
-        do {
-            try context.save()
-        } catch {
-            print("CoreData 저장 실패: \(error)")
-        }
+        try context.save()
     }
 }
