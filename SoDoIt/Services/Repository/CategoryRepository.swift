@@ -52,9 +52,14 @@ final class CategoryRepository {
         }
     }
 
-    func deleteCategory(_ category: Category) {
+    func deleteCategory(_ category: Category) throws {
         context.delete(category)
-        do { try save() } catch { print("CoreData 저장 실패: \(error)") }
+        do {
+            try save()
+        } catch {
+            context.rollback()
+            throw error
+        }
     }
 
     // MARK: - Private

@@ -49,8 +49,8 @@ final class CategoryListViewModel: NSObject, NSFetchedResultsControllerDelegate 
 
     // MARK: - Actions
 
-    func deleteCategory(_ category: Category) {
-        repository.deleteCategory(category)
+    func deleteCategory(_ category: Category) throws {
+        try repository.deleteCategory(category)
     }
 
     func updateCategory(
