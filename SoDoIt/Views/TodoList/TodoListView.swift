@@ -10,6 +10,7 @@ import SwiftUI
 struct TodoListView: View {
     @State private var todoListViewModel: TodoListViewModel
     @State private var showingAddTodo = false
+    @State private var showingCategoryList = false
     
     init(viewModel: TodoListViewModel = TodoListViewModel()) {
         _todoListViewModel = State(wrappedValue: viewModel)
@@ -32,12 +33,22 @@ struct TodoListView: View {
             .sheet(isPresented: $showingAddTodo) {
                 AddTodoView()
             }
+            .sheet(isPresented: $showingCategoryList) {
+                CategoryListView()
+            }
             .toolbar {
                 ToolbarItem(placement: .topBarTrailing) {
                     Button {
                         showingAddTodo = true
                     } label: {
                         Image(systemName: "plus")
+                    }
+                }
+                ToolbarItem(placement: .topBarLeading) {
+                    Button {
+                        showingCategoryList = true
+                    } label: {
+                        Image(systemName: "folder.fill")
                     }
                 }
             }
