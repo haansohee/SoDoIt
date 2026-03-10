@@ -38,7 +38,7 @@ struct AddCategoryView: View {
                                 try addCategoryViewModel.save()
                                 dismiss()
                             } catch {
-                                Logger(subsystem: Bundle.main.bundleIdentifier!, category: "AddCategoryView")
+                                Logger(subsystem: Bundle.main.bundleIdentifier ?? "unknown.bundle.id", category: "AddCategoryView")
                                     .error("카테고리 저장 실패: \(error)")
                             }
                         }

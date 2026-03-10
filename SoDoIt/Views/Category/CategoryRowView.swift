@@ -90,7 +90,7 @@ struct CategoryRowView: View {
     do {
         categories = try context.fetch(request)
     } catch {
-        categories = []
+        fatalError("미리보기 데이터 로드 실패: \(error)")
     }
     
     return List {
