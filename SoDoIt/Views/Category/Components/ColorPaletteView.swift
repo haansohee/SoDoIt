@@ -41,6 +41,8 @@ struct ColorPaletteView: View {
                             .foregroundStyle(.white)
                     }
                 }
+                .padding(4)
+                .contentShape(Circle())
         }
         .accessibilityLabel(preset.name)
     }

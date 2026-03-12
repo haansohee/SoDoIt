@@ -7,10 +7,16 @@
 
 import SwiftUI
 
+private enum SheetRoute: Identifiable {
+    case addTodo
+    case categoryList
+
+    var id: Int { hashValue }
+}
+
 struct TodoListView: View {
     @State private var todoListViewModel: TodoListViewModel
-    @State private var showingAddTodo = false
-    @State private var showingCategoryList = false
+    @State private var activeSheet: SheetRoute?
     
     init(viewModel: TodoListViewModel = TodoListViewModel()) {
         _todoListViewModel = State(wrappedValue: viewModel)
@@ -30,23 +36,25 @@ struct TodoListView: View {
                 }
             }
             .navigationTitle("할 일")
-            .sheet(isPresented: $showingAddTodo) {
-                AddTodoView()
-            }
-            .sheet(isPresented: $showingCategoryList) {
-                CategoryListView()
+            .sheet(item: $activeSheet) { route in
+                switch route {
+                case .addTodo:
+                    AddTodoView()
+                case .categoryList:
+                    CategoryListView()
+                }
             }
             .toolbar {
                 ToolbarItem(placement: .topBarTrailing) {
                     Button {
-                        showingAddTodo = true
+                        activeSheet = .addTodo
                     } label: {
                         Image(systemName: "plus")
                     }
                 }
                 ToolbarItem(placement: .topBarLeading) {
                     Button {
-                        showingCategoryList = true
+                        activeSheet = .categoryList
                     } label: {
                         Image(systemName: "folder.fill")
                     }
