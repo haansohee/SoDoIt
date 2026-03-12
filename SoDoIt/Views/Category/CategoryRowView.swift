@@ -16,7 +16,11 @@ struct CategoryRowView: View {
     @State private var editName: String = ""
     @State private var editColorHex: String = ""
     @State private var editIconName: String = ""
-    
+
+    private var trimmedEditName: String {
+        editName.trimmingCharacters(in: .whitespacesAndNewlines)
+    }
+
     var body: some View {
         if isEditing {
             editingView
@@ -70,12 +74,10 @@ struct CategoryRowView: View {
                 Spacer()
                 
                 Button("완료") {
-                    let trimmed = editName.trimmingCharacters(in: .whitespacesAndNewlines)
-                    guard !trimmed.isEmpty else { return }
-                    onUpdate(trimmed, editColorHex, editIconName)
+                    onUpdate(trimmedEditName, editColorHex, editIconName)
                     isEditing = false
                 }
-                .disabled(editName.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty)
+                .disabled(trimmedEditName.isEmpty)
             }
         }
         .padding(.vertical, 4)
