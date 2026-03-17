@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import CoreData
 
 private enum SheetRoute: Identifiable {
     case addTodo
@@ -24,15 +25,31 @@ struct TodoListView: View {
     
     var body: some View {
         NavigationStack {
-            Group {
+            VStack(spacing: 0) {
+                if !todoListViewModel.categories.isEmpty {
+                    CategoryFilterBar(
+                        categories: todoListViewModel.categories,
+                        selectedCategory: todoListViewModel.filterCategory,
+                        onSelect: { category in
+                            todoListViewModel.applyFilter(category)
+                        }
+                    )
+                }
+
                 if todoListViewModel.todos.isEmpty {
                     ContentUnavailableView(
-                        "할 일이 없습니다",
+                        todoListViewModel.filterCategory != nil ? "해당 카테고리에 할 일이 없습니다" : "할 일이 없습니다",
                         systemImage: "checklist",
                         description: Text("+ 버튼을 눌러 새로운 할 일을 추가하세요")
                     )
+                    .frame(maxHeight: .infinity)
                 } else {
                     todoList
+                }
+            }
+            .navigationDestination(for: NSManagedObjectID.self) { objectID in
+                if let todo = try? CoreDataManager.shared.viewContext.existingObject(with: objectID) as? TodoItem {
+                    EditTodoView(todo: todo)
                 }
             }
             .navigationTitle("할 일")
@@ -76,13 +93,15 @@ struct TodoListView: View {
         if !todos.isEmpty {
             Section(title) {
                 ForEach(todos) { todo in
-                    TodoRowView(todo: todo)
-                        .swipeActions(edge: .leading) {
-                            toggleButton(for: todo)
-                        }
-                        .swipeActions(edge: .trailing) {
-                            deleteButton(for: todo)
-                        }
+                    NavigationLink(value: todo.objectID) {
+                        TodoRowView(todo: todo)
+                    }
+                    .swipeActions(edge: .leading) {
+                        toggleButton(for: todo)
+                    }
+                    .swipeActions(edge: .trailing) {
+                        deleteButton(for: todo)
+                    }
                 }
             }
         }

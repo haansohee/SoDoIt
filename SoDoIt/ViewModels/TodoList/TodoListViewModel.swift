@@ -10,12 +10,15 @@ import CoreData
 import Observation
 
 @Observable
-final class TodoListViewModel: NSObject, NSFetchedResultsControllerDelegate {    
+final class TodoListViewModel: NSObject, NSFetchedResultsControllerDelegate {
     private(set) var todos: [TodoItem] = []
-    
+    private(set) var categories: [Category] = []
+    var filterCategory: Category?
+
     private let fetchedResultsController: NSFetchedResultsController<TodoItem>
+    private let categoryFRC: NSFetchedResultsController<Category>
     private let repository: TodoRepository
-    
+
     private var splitIndex: Int {
         todos.firstIndex { $0.isCompleted } ?? todos.endIndex
     }
@@ -25,12 +28,13 @@ final class TodoListViewModel: NSObject, NSFetchedResultsControllerDelegate {
     var completedTodos: [TodoItem] {
         Array(todos.suffix(from: splitIndex))
     }
-    
+
     init(
         context: NSManagedObjectContext = CoreDataManager.shared.viewContext,
         repository: TodoRepository? = nil
     ) {
         self.repository = repository ?? TodoRepository(context: context)
+
         let request: NSFetchRequest<TodoItem> = TodoItem.fetchRequest()
         request.sortDescriptors = [
             NSSortDescriptor(keyPath: \TodoItem.isCompleted, ascending: true),
@@ -43,36 +47,80 @@ final class TodoListViewModel: NSObject, NSFetchedResultsControllerDelegate {
             sectionNameKeyPath: nil,
             cacheName: nil
         )
+
+        let categoryRequest: NSFetchRequest<Category> = Category.fetchRequest()
+        categoryRequest.sortDescriptors = [
+            NSSortDescriptor(keyPath: \Category.name, ascending: true)
+        ]
+        categoryFRC = NSFetchedResultsController(
+            fetchRequest: categoryRequest,
+            managedObjectContext: context,
+            sectionNameKeyPath: nil,
+            cacheName: nil
+        )
+
         super.init()
         fetchedResultsController.delegate = self
-        
+        categoryFRC.delegate = self
+
         do {
             try fetchedResultsController.performFetch()
             todos = fetchedResultsController.fetchedObjects ?? []
+            try categoryFRC.performFetch()
+            categories = categoryFRC.fetchedObjects ?? []
         } catch {
             NSLog("TodoListViewModel fetch 실패: \(error)")
             print("TodoListViewModel fetch 실패: \(error)")
         }
     }
-    
+
     /// preview용 편의 이니셜라이저
     convenience init(preview: Bool) {
         self.init(context: CoreDataManager.preview.viewContext)
     }
-    
+
     // MARK: - Actions
-    
+
     func toggleCompletion(_ todo: TodoItem) {
         repository.toggleTodoCompletion(todo)
     }
-    
+
     func delete(_ todo: TodoItem) {
         repository.deleteTodo(todo)
     }
-    
+
+    func applyFilter(_ category: Category?) {
+        if filterCategory?.objectID == category?.objectID {
+            filterCategory = nil
+            fetchedResultsController.fetchRequest.predicate = nil
+        } else {
+            filterCategory = category
+            if let category {
+                fetchedResultsController.fetchRequest.predicate = NSPredicate(format: "category == %@", category)
+            } else {
+                fetchedResultsController.fetchRequest.predicate = nil
+            }
+        }
+
+        do {
+            try fetchedResultsController.performFetch()
+            todos = fetchedResultsController.fetchedObjects ?? []
+        } catch {
+            NSLog("TodoListViewModel 필터 적용 실패: \(error)")
+        }
+    }
+
     // MARK: - NSFetchedResultsControllerDelegate
-    
+
     func controllerDidChangeContent(_ controller: NSFetchedResultsController<NSFetchRequestResult>) {
-        todos = controller.fetchedObjects as? [TodoItem] ?? []
+        if controller === fetchedResultsController {
+            todos = controller.fetchedObjects as? [TodoItem] ?? []
+        } else if controller === categoryFRC {
+            categories = controller.fetchedObjects as? [Category] ?? []
+            // 필터 중인 카테고리가 삭제된 경우 필터 해제
+            if let filterCategory, !categories.contains(where: { $0.objectID == filterCategory.objectID }) {
+                applyFilter(nil)
+            }
+        }
     }
 }
