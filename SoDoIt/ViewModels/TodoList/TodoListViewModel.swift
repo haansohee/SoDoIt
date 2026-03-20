@@ -118,7 +118,8 @@ final class TodoListViewModel: NSObject, NSFetchedResultsControllerDelegate {
         } else if controller === categoryFRC {
             categories = controller.fetchedObjects as? [Category] ?? []
             // 필터 중인 카테고리가 삭제된 경우 필터 해제
-            if let filterCategory, !categories.contains(where: { $0.objectID == filterCategory.objectID }) {
+            if let filterCategory,
+               filterCategory.isDeleted {
                 applyFilter(nil)
             }
         }
