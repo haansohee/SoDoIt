@@ -46,13 +46,18 @@ final class TodoRepository {
         dueDate: Date?,
         priority: Priority,
         category: Category?
-    ) {
+    ) throws {
         todo.title = title
         todo.memo = memo
         todo.dueDate = dueDate
         todo.priority = priority.rawValue
         todo.category = category
-        do { try save() } catch { print("CoreData 저장 실패: \(error)") }
+        do {
+            try save()
+        } catch {
+            context.rollback()
+            throw error
+        }
     }
 
     func toggleTodoCompletion(_ todo: TodoItem) {

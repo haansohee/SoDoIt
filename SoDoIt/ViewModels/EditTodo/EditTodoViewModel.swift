@@ -66,15 +66,20 @@ final class EditTodoViewModel: NSObject, NSFetchedResultsControllerDelegate {
 
     // MARK: - Actions
 
-    func save() {
-        repository.updateTodo(
-            todo,
-            title: formState.title.trimmingCharacters(in: .whitespacesAndNewlines),
-            memo: formState.memo.isEmpty ? nil : formState.memo,
-            dueDate: formState.hasDueDate ? formState.dueDate : nil,
-            priority: formState.priority,
-            category: formState.selectedCategory
-        )
+    func save() throws {
+        do {
+            try repository.updateTodo(
+                todo,
+                title: formState.title.trimmingCharacters(in: .whitespacesAndNewlines),
+                memo: formState.memo.isEmpty ? nil : formState.memo,
+                dueDate: formState.hasDueDate ? formState.dueDate : nil,
+                priority: formState.priority,
+                category: formState.selectedCategory
+            )
+        } catch {
+            showSaveError = true
+            throw error
+        }
     }
 
     // MARK: - NSFetchedResultsControllerDelegate

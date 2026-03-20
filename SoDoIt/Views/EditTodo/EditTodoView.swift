@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import OSLog
 
 struct EditTodoView: View {
     @Environment(\.dismiss) private var dismiss
@@ -36,11 +37,21 @@ struct EditTodoView: View {
         .toolbar {
             ToolbarItem(placement: .confirmationAction) {
                 Button("저장") {
-                    viewModel.save()
-                    dismiss()
+                    do {
+                        try viewModel.save()
+                        dismiss()
+                    } catch {
+                        Logger(subsystem: Bundle.main.bundleIdentifier!, category: "EditTodoView")
+                            .error("할 일 수정 저장 실패: \(error)")
+                    }
                 }
                 .disabled(!viewModel.formState.canSave)
             }
+        }
+        .alert("저장 실패", isPresented: $viewModel.showSaveError) {
+            Button("확인", role: .cancel) { }
+        } message: {
+            Text("할 일을 저장하지 못했습니다. 다시 시도해 주세요.")
         }
     }
 
