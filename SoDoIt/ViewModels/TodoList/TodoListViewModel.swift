@@ -89,6 +89,10 @@ final class TodoListViewModel: NSObject, NSFetchedResultsControllerDelegate {
         repository.deleteTodo(todo)
     }
 
+    func todo(for objectID: NSManagedObjectID) -> TodoItem? {
+        try? fetchedResultsController.managedObjectContext.existingObject(with: objectID) as? TodoItem
+    }
+
     func applyFilter(_ category: Category?) {
         if filterCategory?.objectID == category?.objectID {
             filterCategory = nil
@@ -113,9 +117,10 @@ final class TodoListViewModel: NSObject, NSFetchedResultsControllerDelegate {
     // MARK: - NSFetchedResultsControllerDelegate
 
     func controllerDidChangeContent(_ controller: NSFetchedResultsController<NSFetchRequestResult>) {
-        if controller === fetchedResultsController {
+        let controllerID = ObjectIdentifier(controller)
+        if controllerID == ObjectIdentifier(fetchedResultsController) {
             todos = controller.fetchedObjects as? [TodoItem] ?? []
-        } else if controller === categoryFRC {
+        } else if controllerID == ObjectIdentifier(categoryFRC) {
             categories = controller.fetchedObjects as? [Category] ?? []
             // 필터 중인 카테고리가 삭제된 경우 필터 해제
             if let filterCategory,

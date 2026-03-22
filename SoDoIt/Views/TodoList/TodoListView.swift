@@ -48,7 +48,7 @@ struct TodoListView: View {
                 }
             }
             .navigationDestination(for: NSManagedObjectID.self) { objectID in
-                if let todo = try? CoreDataManager.shared.viewContext.existingObject(with: objectID) as? TodoItem {
+                if let todo = todoListViewModel.todo(for: objectID) {
                     EditTodoView(todo: todo)
                 }
             }
