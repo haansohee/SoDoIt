@@ -50,6 +50,8 @@ struct TodoListView: View {
             .navigationDestination(for: NSManagedObjectID.self) { objectID in
                 if let todo = todoListViewModel.todo(for: objectID) {
                     EditTodoView(todo: todo)
+                } else {
+                    ContentUnavailableView("할 일을 찾을 수 없습니다", systemImage: "exclamationmark.triangle")
                 }
             }
             .navigationTitle("할 일")
