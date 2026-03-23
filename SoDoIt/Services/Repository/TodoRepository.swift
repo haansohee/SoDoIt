@@ -60,15 +60,25 @@ final class TodoRepository {
         }
     }
 
-    func toggleTodoCompletion(_ todo: TodoItem) {
+    func toggleTodoCompletion(_ todo: TodoItem) throws {
         todo.isCompleted.toggle()
         todo.completedAt = todo.isCompleted ? Date() : nil
-        do { try save() } catch { print("CoreData 저장 실패: \(error)") }
+        do {
+            try save()
+        } catch {
+            context.rollback()
+            throw error
+        }
     }
 
-    func deleteTodo(_ todo: TodoItem) {
+    func deleteTodo(_ todo: TodoItem) throws {
         context.delete(todo)
-        do { try save() } catch { print("CoreData 저장 실패: \(error)") }
+        do {
+            try save()
+        } catch {
+            context.rollback()
+            throw error
+        }
     }
 
     // MARK: - Private

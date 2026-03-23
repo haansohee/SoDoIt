@@ -71,6 +71,16 @@ struct TodoListView: View {
             } message: {
                 Text("카테고리 목록을 불러오는 중 오류가 발생했습니다.")
             }
+            .alert("상태 변경 실패", isPresented: $todoListViewModel.showToggleError) {
+                Button("확인", role: .cancel) {}
+            } message: {
+                Text("할 일의 완료 상태를 변경하지 못했습니다.")
+            }
+            .alert("삭제 실패", isPresented: $todoListViewModel.showDeleteError) {
+                Button("확인", role: .cancel) {}
+            } message: {
+                Text("할 일을 삭제하지 못했습니다.")
+            }
             .alert("필터 적용 실패", isPresented: $todoListViewModel.showFilterError) {
                 Button("확인", role: .cancel) {}
             } message: {

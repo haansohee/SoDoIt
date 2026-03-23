@@ -18,6 +18,8 @@ final class TodoListViewModel: NSObject, NSFetchedResultsControllerDelegate {
     var showTodoFetchError = false
     var showCategoryFetchError = false
     var showFilterError = false
+    var showToggleError = false
+    var showDeleteError = false
 
     private let fetchedResultsController: NSFetchedResultsController<TodoItem>
     private let categoryFRC: NSFetchedResultsController<Category>
@@ -92,11 +94,21 @@ final class TodoListViewModel: NSObject, NSFetchedResultsControllerDelegate {
     // MARK: - Actions
 
     func toggleCompletion(_ todo: TodoItem) {
-        repository.toggleTodoCompletion(todo)
+        do {
+            try repository.toggleTodoCompletion(todo)
+        } catch {
+            showToggleError = true
+            Logger(subsystem: Bundle.main.bundleIdentifier!, category: "TodoListViewModel").error("완료 상태 변경 실패: \(error)")
+        }
     }
 
     func delete(_ todo: TodoItem) {
-        repository.deleteTodo(todo)
+        do {
+            try repository.deleteTodo(todo)
+        } catch {
+            showDeleteError = true
+            Logger(subsystem: Bundle.main.bundleIdentifier!, category: "TodoListViewModel").error("할 일 삭제 실패: \(error)")
+        }
     }
 
     func todo(for objectID: NSManagedObjectID) -> TodoItem? {
