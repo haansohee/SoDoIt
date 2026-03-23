@@ -10,16 +10,42 @@ import CoreData
 import Observation
 import OSLog
 
+enum TodoListError: Identifiable {
+    case todoFetch
+    case categoryFetch
+    case filter
+    case toggle
+    case delete
+
+    var id: Self { self }
+
+    var title: String {
+        switch self {
+        case .todoFetch:    "할 일 로딩 실패"
+        case .categoryFetch: "카테고리 로딩 실패"
+        case .filter:       "필터 적용 실패"
+        case .toggle:       "상태 변경 실패"
+        case .delete:       "삭제 실패"
+        }
+    }
+
+    var message: String {
+        switch self {
+        case .todoFetch:    "할 일 목록을 불러오는 중 오류가 발생했습니다."
+        case .categoryFetch: "카테고리 목록을 불러오는 중 오류가 발생했습니다."
+        case .filter:       "카테고리 필터를 적용하는 중 오류가 발생했습니다."
+        case .toggle:       "할 일의 완료 상태를 변경하지 못했습니다."
+        case .delete:       "할 일을 삭제하지 못했습니다."
+        }
+    }
+}
+
 @Observable
 final class TodoListViewModel: NSObject, NSFetchedResultsControllerDelegate {
     private(set) var todos: [TodoItem] = []
     private(set) var categories: [Category] = []
     var filterCategory: Category?
-    var showTodoFetchError = false
-    var showCategoryFetchError = false
-    var showFilterError = false
-    var showToggleError = false
-    var showDeleteError = false
+    var activeError: TodoListError?
 
     private let fetchedResultsController: NSFetchedResultsController<TodoItem>
     private let categoryFRC: NSFetchedResultsController<Category>
@@ -73,7 +99,7 @@ final class TodoListViewModel: NSObject, NSFetchedResultsControllerDelegate {
             try fetchedResultsController.performFetch()
             todos = fetchedResultsController.fetchedObjects ?? []
         } catch {
-            showTodoFetchError = true
+            activeError = .todoFetch
             Logger(subsystem: Bundle.main.bundleIdentifier!, category: "TodoListViewModel").error("할 일 fetch 실패: \(error)")
         }
 
@@ -81,7 +107,7 @@ final class TodoListViewModel: NSObject, NSFetchedResultsControllerDelegate {
             try categoryFRC.performFetch()
             categories = categoryFRC.fetchedObjects ?? []
         } catch {
-            showCategoryFetchError = true
+            activeError = .categoryFetch
             Logger(subsystem: Bundle.main.bundleIdentifier!, category: "TodoListViewModel").error("카테고리 fetch 실패: \(error)")
         }
     }
@@ -97,7 +123,7 @@ final class TodoListViewModel: NSObject, NSFetchedResultsControllerDelegate {
         do {
             try repository.toggleTodoCompletion(todo)
         } catch {
-            showToggleError = true
+            activeError = .toggle
             Logger(subsystem: Bundle.main.bundleIdentifier!, category: "TodoListViewModel").error("완료 상태 변경 실패: \(error)")
         }
     }
@@ -106,7 +132,7 @@ final class TodoListViewModel: NSObject, NSFetchedResultsControllerDelegate {
         do {
             try repository.deleteTodo(todo)
         } catch {
-            showDeleteError = true
+            activeError = .delete
             Logger(subsystem: Bundle.main.bundleIdentifier!, category: "TodoListViewModel").error("할 일 삭제 실패: \(error)")
         }
     }
@@ -130,7 +156,7 @@ final class TodoListViewModel: NSObject, NSFetchedResultsControllerDelegate {
             filterCategory = oldFilter
             fetchedResultsController.fetchRequest.predicate = oldPredicate
             
-            showFilterError = true
+            activeError = .filter
             Logger(subsystem: Bundle.main.bundleIdentifier!, category: "TodoListViewModel").error("TodoListViewModel 필터 적용 실패: \(error)")
         }
     }
