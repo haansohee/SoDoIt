@@ -15,6 +15,7 @@ final class TodoListViewModel: NSObject, NSFetchedResultsControllerDelegate {
     private(set) var todos: [TodoItem] = []
     private(set) var categories: [Category] = []
     var filterCategory: Category?
+    var showFetchError = false
     var showFilterError = false
 
     private let fetchedResultsController: NSFetchedResultsController<TodoItem>
@@ -71,6 +72,7 @@ final class TodoListViewModel: NSObject, NSFetchedResultsControllerDelegate {
             try categoryFRC.performFetch()
             categories = categoryFRC.fetchedObjects ?? []
         } catch {
+            showFetchError = true
             Logger(subsystem: Bundle.main.bundleIdentifier!, category: "TodoListViewModel").error("TodoListViewModel fetch 실패: \(error)")
         }
     }
