@@ -15,6 +15,7 @@ final class TodoListViewModel: NSObject, NSFetchedResultsControllerDelegate {
     private(set) var todos: [TodoItem] = []
     private(set) var categories: [Category] = []
     var filterCategory: Category?
+    var showFilterError = false
 
     private let fetchedResultsController: NSFetchedResultsController<TodoItem>
     private let categoryFRC: NSFetchedResultsController<Category>
@@ -102,6 +103,7 @@ final class TodoListViewModel: NSObject, NSFetchedResultsControllerDelegate {
             try fetchedResultsController.performFetch()
             todos = fetchedResultsController.fetchedObjects ?? []
         } catch {
+            showFilterError = true
             Logger(subsystem: Bundle.main.bundleIdentifier!, category: "TodoListViewModel").error("TodoListViewModel 필터 적용 실패: \(error)")
         }
     }

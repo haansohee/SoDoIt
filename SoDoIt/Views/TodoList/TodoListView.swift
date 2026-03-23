@@ -61,6 +61,11 @@ struct TodoListView: View {
                     CategoryListView()
                 }
             }
+            .alert("필터 적용 실패", isPresented: $todoListViewModel.showFilterError) {
+                Button("확인", role: .cancel) {}
+            } message: {
+                Text("카테고리 필터를 적용하는 중 오류가 발생했습니다.")
+            }
             .toolbar {
                 ToolbarItem(placement: .topBarTrailing) {
                     Button {
