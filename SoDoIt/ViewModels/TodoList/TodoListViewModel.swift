@@ -110,7 +110,7 @@ final class TodoListViewModel: NSObject, NSFetchedResultsControllerDelegate {
             try fetchedResultsController.performFetch()
             todos = fetchedResultsController.fetchedObjects ?? []
         } catch {
-            NSLog("TodoListViewModel 필터 적용 실패: \(error)")
+            Logger(subsystem: Bundle.main.bundleIdentifier!, category: "TodoListViewModel").error("TodoListViewModel 필터 적용 실패: \(error)")
         }
     }
 
