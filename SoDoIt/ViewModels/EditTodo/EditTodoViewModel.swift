@@ -23,9 +23,9 @@ final class EditTodoViewModel: NSObject, NSFetchedResultsControllerDelegate {
 
     init(
         todo: TodoItem,
-        context: NSManagedObjectContext = CoreDataManager.shared.viewContext,
         repository: TodoRepository? = nil
     ) {
+        let context = todo.managedObjectContext ?? CoreDataManager.shared.viewContext
         self.todo = todo
         self.repository = repository ?? TodoRepository(context: context)
 
