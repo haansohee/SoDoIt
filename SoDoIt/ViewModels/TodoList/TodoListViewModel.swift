@@ -141,11 +141,20 @@ final class TodoListViewModel: NSObject, NSFetchedResultsControllerDelegate {
         if controller === fetchedResultsController {
             todos = controller.fetchedObjects as? [TodoItem] ?? []
         } else if controller === categoryFRC {
-            categories = controller.fetchedObjects as? [Category] ?? []
-            // 필터 중인 카테고리가 삭제된 경우 필터 해제
-            if let filterCategory,
-               filterCategory.isDeleted {
-                applyFilter(nil)
+            let newCategories = controller.fetchedObjects as? [Category] ?? []
+            self.categories = newCategories
+            
+            if let currentFilter = self.filterCategory {
+                if currentFilter.isDeleted {
+                    // Category was deleted, clear filter
+                    applyFilter(nil)
+                } else if let updatedFilter = newCategories.first(where: { $0.objectID == currentFilter.objectID }) {
+                    // Category might have been updated, refresh the reference
+                    self.filterCategory = updatedFilter
+                } else {
+                    // The filtered category is lo longer in the fetched list for some reason, clear filter
+                    applyFilter(nil)
+                }
             }
         }
     }
