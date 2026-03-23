@@ -94,18 +94,15 @@ final class TodoListViewModel: NSObject, NSFetchedResultsControllerDelegate {
     }
 
     func applyFilter(_ category: Category?) {
-        if filterCategory?.objectID == category?.objectID {
-            filterCategory = nil
-        } else {
-            filterCategory = category
-        }
+        let newFilter = (filterCategory?.objectID == category?.objectID) ? nil : category
+        filterCategory = newFilter
         
-        if let currentFilter = filterCategory {
-            fetchedResultsController.fetchRequest.predicate = NSPredicate(format: "category == %@", currentFilter)
+        if let newFilter = newFilter {
+            fetchedResultsController.fetchRequest.predicate = NSPredicate(format: "category == %@", newFilter)
         } else {
             fetchedResultsController.fetchRequest.predicate = nil
         }
-
+        
         do {
             try fetchedResultsController.performFetch()
             todos = fetchedResultsController.fetchedObjects ?? []
