@@ -15,7 +15,8 @@ final class TodoListViewModel: NSObject, NSFetchedResultsControllerDelegate {
     private(set) var todos: [TodoItem] = []
     private(set) var categories: [Category] = []
     var filterCategory: Category?
-    var showFetchError = false
+    var showTodoFetchError = false
+    var showCategoryFetchError = false
     var showFilterError = false
 
     private let fetchedResultsController: NSFetchedResultsController<TodoItem>
@@ -69,11 +70,17 @@ final class TodoListViewModel: NSObject, NSFetchedResultsControllerDelegate {
         do {
             try fetchedResultsController.performFetch()
             todos = fetchedResultsController.fetchedObjects ?? []
+        } catch {
+            showTodoFetchError = true
+            Logger(subsystem: Bundle.main.bundleIdentifier!, category: "TodoListViewModel").error("할 일 fetch 실패: \(error)")
+        }
+
+        do {
             try categoryFRC.performFetch()
             categories = categoryFRC.fetchedObjects ?? []
         } catch {
-            showFetchError = true
-            Logger(subsystem: Bundle.main.bundleIdentifier!, category: "TodoListViewModel").error("TodoListViewModel fetch 실패: \(error)")
+            showCategoryFetchError = true
+            Logger(subsystem: Bundle.main.bundleIdentifier!, category: "TodoListViewModel").error("카테고리 fetch 실패: \(error)")
         }
     }
 

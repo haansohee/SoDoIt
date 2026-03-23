@@ -61,10 +61,15 @@ struct TodoListView: View {
                     CategoryListView()
                 }
             }
-            .alert("데이터 로딩 실패", isPresented: $todoListViewModel.showFetchError) {
+            .alert("할 일 로딩 실패", isPresented: $todoListViewModel.showTodoFetchError) {
                 Button("확인", role: .cancel) {}
             } message: {
-                Text("할 일 데이터를 불러오는 중 오류가 발생했습니다.")
+                Text("할 일 목록을 불러오는 중 오류가 발생했습니다.")
+            }
+            .alert("카테고리 로딩 실패", isPresented: $todoListViewModel.showCategoryFetchError) {
+                Button("확인", role: .cancel) {}
+            } message: {
+                Text("카테고리 목록을 불러오는 중 오류가 발생했습니다.")
             }
             .alert("필터 적용 실패", isPresented: $todoListViewModel.showFilterError) {
                 Button("확인", role: .cancel) {}
