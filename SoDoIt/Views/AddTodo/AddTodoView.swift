@@ -58,6 +58,11 @@ struct AddTodoView: View {
         } message: {
             Text("할 일을 저장하지 못했습니다. 다시 시도해 주세요.")
         }
+        .alert("카테고리 불러오기 실패", isPresented: $addTodoViewModel.showCategoryFetchError) {
+            Button("확인", role: .cancel) { }
+        } message: {
+            Text("카테고리 목록을 불러오지 못했습니다. 카테고리 없이 추가할 수 있습니다.")
+        }
     }
 
     // MARK: - Title Section

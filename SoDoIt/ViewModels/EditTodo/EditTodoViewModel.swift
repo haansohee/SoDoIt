@@ -14,6 +14,7 @@ import OSLog
 final class EditTodoViewModel: NSObject, NSFetchedResultsControllerDelegate {
     var formState: TodoFormState
     var showSaveError = false
+    var showCategoryFetchError = false
 
     private(set) var categories: [Category] = []
 
@@ -59,6 +60,7 @@ final class EditTodoViewModel: NSObject, NSFetchedResultsControllerDelegate {
             try categoryFRC.performFetch()
             categories = categoryFRC.fetchedObjects ?? []
         } catch {
+            showCategoryFetchError = true
             Logger(subsystem: Bundle.main.bundleIdentifier!, category: "EditTodoViewModel")
                 .error("카테고리 fetch 실패: \(error)")
         }

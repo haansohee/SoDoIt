@@ -28,6 +28,7 @@ struct TodoFormState {
 final class AddTodoViewModel: NSObject, NSFetchedResultsControllerDelegate {
     var formState = TodoFormState()
     var showSaveError = false
+    var showCategoryFetchError = false
 
     private(set) var categories: [Category] = []
     
@@ -59,7 +60,8 @@ final class AddTodoViewModel: NSObject, NSFetchedResultsControllerDelegate {
             try fetchedResultsController.performFetch()
             categories = fetchedResultsController.fetchedObjects ?? []
         } catch {
-            Logger(subsystem: Bundle.main.bundleIdentifier!, category: "AddTodoViewModel").error("AddTodoViewModel 카테고리 fetch 실패: \(error)")
+            showCategoryFetchError = true
+            Logger(subsystem: Bundle.main.bundleIdentifier!, category: "AddTodoViewModel").error("카테고리 fetch 실패: \(error)")
         }
     }
     
