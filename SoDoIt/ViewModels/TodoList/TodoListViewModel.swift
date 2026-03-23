@@ -104,6 +104,9 @@ final class TodoListViewModel: NSObject, NSFetchedResultsControllerDelegate {
     }
 
     func applyFilter(_ category: Category?) {
+        let oldFilter = self.filterCategory
+        let oldPredicate = fetchedResultsController.fetchRequest.predicate
+        
         let newFilter = (filterCategory?.objectID == category?.objectID) ? nil : category
         filterCategory = newFilter
         fetchedResultsController.fetchRequest.predicate = newFilter.map { NSPredicate(format: "category == %@", $0) }
@@ -111,6 +114,10 @@ final class TodoListViewModel: NSObject, NSFetchedResultsControllerDelegate {
         do {
             try fetchedResultsController.performFetch()
         } catch {
+            // Revert state on failure
+            filterCategory = oldFilter
+            fetchedResultsController.fetchRequest.predicate = oldPredicate
+            
             showFilterError = true
             Logger(subsystem: Bundle.main.bundleIdentifier!, category: "TodoListViewModel").error("TodoListViewModel 필터 적용 실패: \(error)")
         }
