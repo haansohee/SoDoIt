@@ -8,6 +8,7 @@
 import Foundation
 import CoreData
 import Observation
+import OSLog
 
 @Observable
 final class TodoListViewModel: NSObject, NSFetchedResultsControllerDelegate {
@@ -69,8 +70,7 @@ final class TodoListViewModel: NSObject, NSFetchedResultsControllerDelegate {
             try categoryFRC.performFetch()
             categories = categoryFRC.fetchedObjects ?? []
         } catch {
-            NSLog("TodoListViewModel fetch 실패: \(error)")
-            print("TodoListViewModel fetch 실패: \(error)")
+            Logger(subsystem: Bundle.main.bundleIdentifier!, category: "TodoListViewModel").error("TodoListViewModel fetch 실패: \(error)")
         }
     }
 
@@ -117,10 +117,9 @@ final class TodoListViewModel: NSObject, NSFetchedResultsControllerDelegate {
     // MARK: - NSFetchedResultsControllerDelegate
 
     func controllerDidChangeContent(_ controller: NSFetchedResultsController<NSFetchRequestResult>) {
-        let controllerID = ObjectIdentifier(controller)
-        if controllerID == ObjectIdentifier(fetchedResultsController) {
+        if controller === fetchedResultsController {
             todos = controller.fetchedObjects as? [TodoItem] ?? []
-        } else if controllerID == ObjectIdentifier(categoryFRC) {
+        } else if controller === categoryFRC {
             categories = controller.fetchedObjects as? [Category] ?? []
             // 필터 중인 카테고리가 삭제된 경우 필터 해제
             if let filterCategory,
