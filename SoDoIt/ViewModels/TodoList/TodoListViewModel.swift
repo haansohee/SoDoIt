@@ -172,13 +172,13 @@ final class TodoListViewModel: NSObject, NSFetchedResultsControllerDelegate {
             
             if let currentFilter = self.filterCategory {
                 if currentFilter.isDeleted {
-                    // Category was deleted, clear filter
+                    // 카테고리가 삭제된 경우 필터 해제
                     applyFilter(nil)
                 } else if let updatedFilter = newCategories.first(where: { $0.objectID == currentFilter.objectID }) {
-                    // Category might have been updated, refresh the reference
+                    // 카테고리가 수정된 경우 참조 갱신
                     self.filterCategory = updatedFilter
                 } else {
-                    // The filtered category is lo longer in the fetched list for some reason, clear filter
+                    // 필터 중인 카테고리가 목록에서 사라진 경우 필터 해제
                     applyFilter(nil)
                 }
             }
