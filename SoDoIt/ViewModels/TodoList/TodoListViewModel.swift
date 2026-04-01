@@ -10,10 +10,6 @@ import CoreData
 import Observation
 import OSLog
 
-enum SmartFilter: CaseIterable {
-    case all, today, upcoming, completed
-}
-
 enum TodoListError: Identifiable {
     case todoFetch
     case categoryFetch

@@ -32,15 +32,19 @@ private struct WindowKeyboardDismissInstaller: UIViewRepresentable {
 }
 
 private class KeyboardDismissTap: UITapGestureRecognizer {
+    private let dismissTarget = DismissTarget()
+
     init() {
         super.init(target: nil, action: nil)
-        addTarget(self, action: #selector(dismiss))
+        addTarget(dismissTarget, action: #selector(DismissTarget.dismiss))
     }
 
-    @objc private func dismiss() {
-        UIApplication.shared.sendAction(
-            #selector(UIResponder.resignFirstResponder),
-            to: nil, from: nil, for: nil
-        )
+    private class DismissTarget: NSObject {
+        @objc func dismiss() {
+            UIApplication.shared.sendAction(
+                #selector(UIResponder.resignFirstResponder),
+                to: nil, from: nil, for: nil
+            )
+        }
     }
 }

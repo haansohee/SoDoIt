@@ -15,7 +15,7 @@ struct CategoryFilterBar: View {
     var body: some View {
         ScrollView(.horizontal, showsIndicators: false) {
             HStack(spacing: 8) {
-                chipButton(
+                ChipButton(
                     label: "전체",
                     icon: "list.bullet",
                     isSelected: selectedCategory == nil
@@ -24,12 +24,11 @@ struct CategoryFilterBar: View {
                 }
 
                 ForEach(categories) { category in
-                    let isSelected = selectedCategory?.id == category.id
-                    chipButton(
+                    ChipButton(
                         label: category.name,
                         icon: category.iconName,
-                        colorHex: category.colorHex,
-                        isSelected: isSelected
+                        color: chipColor(category.colorHex),
+                        isSelected: selectedCategory?.id == category.id
                     ) {
                         onSelect(category)
                     }
@@ -40,35 +39,7 @@ struct CategoryFilterBar: View {
         }
     }
 
-    @ViewBuilder
-    private func chipButton(
-        label: String,
-        icon: String,
-        colorHex: String? = nil,
-        isSelected: Bool,
-        action: @escaping () -> Void
-    ) -> some View {
-        Button(action: action) {
-            HStack(spacing: 4) {
-                Image(systemName: icon)
-                    .font(.caption)
-                Text(label)
-                    .font(.subheadline)
-            }
-            .padding(.horizontal, 12)
-            .padding(.vertical, 6)
-            .background(isSelected ? chipColor(colorHex) : Color.clear)
-            .foregroundStyle(isSelected ? .white : chipColor(colorHex))
-            .clipShape(Capsule())
-            .overlay(
-                Capsule()
-                    .strokeBorder(chipColor(colorHex), lineWidth: 1)
-            )
-        }
-    }
-
-    private func chipColor(_ hex: String?) -> Color {
-        guard let hex, let color = Color(hex: hex) else { return .accentColor }
-        return color
+    private func chipColor(_ hex: String) -> Color {
+        Color(hex: hex) ?? .accentColor
     }
 }
