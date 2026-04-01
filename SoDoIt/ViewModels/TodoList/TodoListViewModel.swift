@@ -168,7 +168,7 @@ final class TodoListViewModel: NSObject, NSFetchedResultsControllerDelegate {
         case .upcoming:
             let calendar = Calendar.current
             guard let tomorrow = calendar.date(byAdding: .day, value: 1, to: calendar.startOfDay(for: Date())) else { break }
-            predicates.append(NSPredicate(format: "dueDate != nil AND dueDate > %@ AND isCompleted == NO", tomorrow as NSDate))
+            predicates.append(NSPredicate(format: "dueDate != nil AND dueDate >= %@ AND isCompleted == NO", tomorrow as NSDate))
         case .completed:
             predicates.append(NSPredicate(format: "isCompleted == YES"))
         }
