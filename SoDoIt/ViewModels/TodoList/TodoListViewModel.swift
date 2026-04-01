@@ -143,40 +143,38 @@ final class TodoListViewModel: NSObject, NSFetchedResultsControllerDelegate {
     }
 
     func applyFilter(_ category: Category?) {
-        let newFilter = (filterCategory?.objectID == category?.objectID) ? nil : category
-        filterCategory = newFilter
-        applyFilters()
+        let newCategory = (filterCategory?.objectID == category?.objectID) ? nil : category
+        applyFilters(smartFilter: smartFilter, category: newCategory)
     }
 
     func applySmartFilter(_ filter: SmartFilter) {
-        smartFilter = filter
-        applyFilters()
+        applyFilters(smartFilter: filter, category: filterCategory)
     }
 
-    private func applyFilters() {
+    private func applyFilters(smartFilter newSmartFilter: SmartFilter, category newCategory: Category?) {
         let oldPredicate = fetchedResultsController.fetchRequest.predicate
-        let oldSmartFilter = smartFilter
-        let oldCategory = filterCategory
 
         var predicates: [NSPredicate] = []
 
         // 스마트 필터 predicate
-        switch smartFilter {
+        switch newSmartFilter {
         case .all:
             break
         case .today:
             let calendar = Calendar.current
             let startOfDay = calendar.startOfDay(for: Date())
-            let startOfTomorrow = calendar.date(byAdding: .day, value: 1, to: startOfDay)!
+            guard let startOfTomorrow = calendar.date(byAdding: .day, value: 1, to: startOfDay) else { break }
             predicates.append(NSPredicate(format: "dueDate >= %@ AND dueDate < %@ AND isCompleted == NO", startOfDay as NSDate, startOfTomorrow as NSDate))
         case .upcoming:
-            predicates.append(NSPredicate(format: "dueDate != nil AND dueDate > %@ AND isCompleted == NO", Date() as NSDate))
+            let calendar = Calendar.current
+            guard let tomorrow = calendar.date(byAdding: .day, value: 1, to: calendar.startOfDay(for: Date())) else { break }
+            predicates.append(NSPredicate(format: "dueDate != nil AND dueDate > %@ AND isCompleted == NO", tomorrow as NSDate))
         case .completed:
             predicates.append(NSPredicate(format: "isCompleted == YES"))
         }
 
         // 카테고리 필터 predicate
-        if let category = filterCategory {
+        if let category = newCategory {
             predicates.append(NSPredicate(format: "category == %@", category))
         }
 
@@ -184,11 +182,10 @@ final class TodoListViewModel: NSObject, NSFetchedResultsControllerDelegate {
 
         do {
             try fetchedResultsController.performFetch()
+            smartFilter = newSmartFilter
+            filterCategory = newCategory
             todos = fetchedResultsController.fetchedObjects ?? []
         } catch {
-            // Revert state on failure
-            smartFilter = oldSmartFilter
-            filterCategory = oldCategory
             fetchedResultsController.fetchRequest.predicate = oldPredicate
 
             activeError = .filter
