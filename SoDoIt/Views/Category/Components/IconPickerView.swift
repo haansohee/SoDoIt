@@ -43,6 +43,7 @@ struct IconPickerView: View {
                 )
                 .foregroundStyle(selectedIcon == icon.symbol ? Color.accentColor : .secondary)
         }
+        .buttonStyle(.borderless)
         .accessibilityLabel(icon.label)
     }
 }
