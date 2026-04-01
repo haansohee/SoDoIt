@@ -23,9 +23,7 @@ struct TodoFormBodyView: View {
             prioritySection
             categorySection
         }
-        .onTapGesture {
-            focusedField = nil
-        }
+        .scrollDismissesKeyboard(.interactively)
     }
 
     // MARK: - Title Section
