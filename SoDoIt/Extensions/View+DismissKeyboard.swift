@@ -14,21 +14,31 @@ extension View {
 }
 
 private struct WindowKeyboardDismissInstaller: UIViewRepresentable {
-    func makeUIView(context: Context) -> UIView {
-        let view = UIView(frame: .zero)
-        view.isUserInteractionEnabled = false
-        DispatchQueue.main.async {
-            if let window = view.window,
-               !(window.gestureRecognizers ?? []).contains(where: { $0 is KeyboardDismissTap }) {
-                let tap = KeyboardDismissTap()
-                tap.cancelsTouchesInView = false
-                window.addGestureRecognizer(tap)
-            }
-        }
-        return view
+    func makeUIView(context: Context) -> KeyboardDismissInstallerView {
+        KeyboardDismissInstallerView()
     }
 
-    func updateUIView(_ uiView: UIView, context: Context) {}
+    func updateUIView(_ uiView: KeyboardDismissInstallerView, context: Context) {}
+}
+
+private class KeyboardDismissInstallerView: UIView {
+    override init(frame: CGRect) {
+        super.init(frame: .zero)
+        isUserInteractionEnabled = false
+    }
+
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+
+    override func didMoveToWindow() {
+        super.didMoveToWindow()
+        guard let window,
+              !(window.gestureRecognizers ?? []).contains(where: { $0 is KeyboardDismissTap }) else { return }
+        let tap = KeyboardDismissTap()
+        tap.cancelsTouchesInView = false
+        window.addGestureRecognizer(tap)
+    }
 }
 
 private class KeyboardDismissTap: UITapGestureRecognizer {

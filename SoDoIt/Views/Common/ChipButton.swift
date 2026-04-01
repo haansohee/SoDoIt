@@ -32,5 +32,6 @@ struct ChipButton: View {
                     .strokeBorder(color, lineWidth: 1)
             )
         }
+        .accessibilityAddTraits(isSelected ? .isSelected : [])
     }
 }

@@ -103,14 +103,17 @@ struct TodoListView: View {
     
     // MARK: - 빈 상태 메시지
     private var emptyMessage: String {
-        if todoListViewModel.filterCategory != nil {
-            return "해당 카테고리에 할 일이 없습니다"
-        }
-        switch todoListViewModel.smartFilter {
-        case .all:       return "할 일이 없습니다"
-        case .today:     return "오늘 마감인 할 일이 없습니다"
-        case .upcoming:  return "예정된 할 일이 없습니다"
-        case .completed: return "완료된 할 일이 없습니다"
+        let categoryName = todoListViewModel.filterCategory?.name
+
+        switch (todoListViewModel.smartFilter, categoryName) {
+        case (.all, let name?):        return "\(name)에 할 일이 없습니다"
+        case (.today, let name?):      return "\(name)에 오늘 마감인 할 일이 없습니다"
+        case (.upcoming, let name?):   return "\(name)에 예정된 할 일이 없습니다"
+        case (.completed, let name?):  return "\(name)에 완료된 할 일이 없습니다"
+        case (.all, nil):              return "할 일이 없습니다"
+        case (.today, nil):            return "오늘 마감인 할 일이 없습니다"
+        case (.upcoming, nil):         return "예정된 할 일이 없습니다"
+        case (.completed, nil):        return "완료된 할 일이 없습니다"
         }
     }
 
