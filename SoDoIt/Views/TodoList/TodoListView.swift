@@ -26,6 +26,13 @@ struct TodoListView: View {
     var body: some View {
         NavigationStack {
             VStack(spacing: 0) {
+                SmartFilterBar(
+                    selectedFilter: todoListViewModel.smartFilter,
+                    onSelect: { filter in
+                        todoListViewModel.applySmartFilter(filter)
+                    }
+                )
+
                 if !todoListViewModel.categories.isEmpty {
                     CategoryFilterBar(
                         categories: todoListViewModel.categories,
@@ -38,11 +45,13 @@ struct TodoListView: View {
 
                 if todoListViewModel.todos.isEmpty {
                     ContentUnavailableView(
-                        todoListViewModel.filterCategory != nil ? "해당 카테고리에 할 일이 없습니다" : "할 일이 없습니다",
+                        emptyMessage,
                         systemImage: "checklist",
                         description: Text("+ 버튼을 눌러 새로운 할 일을 추가하세요")
                     )
                     .frame(maxHeight: .infinity)
+                } else if todoListViewModel.smartFilter == .completed {
+                    completedList
                 } else {
                     todoList
                 }
@@ -92,6 +101,36 @@ struct TodoListView: View {
         }
     }
     
+    // MARK: - 빈 상태 메시지
+    private var emptyMessage: String {
+        if todoListViewModel.filterCategory != nil {
+            return "해당 카테고리에 할 일이 없습니다"
+        }
+        switch todoListViewModel.smartFilter {
+        case .all:       return "할 일이 없습니다"
+        case .today:     return "오늘 마감인 할 일이 없습니다"
+        case .upcoming:  return "예정된 할 일이 없습니다"
+        case .completed: return "완료된 할 일이 없습니다"
+        }
+    }
+
+    // MARK: - 완료 필터 목록 (섹션 분리 없음)
+    private var completedList: some View {
+        List {
+            ForEach(todoListViewModel.todos) { todo in
+                NavigationLink(value: todo.objectID) {
+                    TodoRowView(todo: todo)
+                }
+                .swipeActions(edge: .leading) {
+                    toggleButton(for: todo)
+                }
+                .swipeActions(edge: .trailing) {
+                    deleteButton(for: todo)
+                }
+            }
+        }
+    }
+
     // MARK: - 할 일 목록
     private var todoList: some View {
         List {
