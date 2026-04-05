@@ -39,7 +39,8 @@ struct CategoryFilterBar: View {
         }
     }
 
-    private func chipColor(_ hex: String) -> Color {
-        Color(hex: hex) ?? .accentColor
+    private func chipColor(_ hex: String?) -> Color {
+        guard let hex else { return .accentColor }
+        return Color(hex: hex) ?? .accentColor
     }
 }
