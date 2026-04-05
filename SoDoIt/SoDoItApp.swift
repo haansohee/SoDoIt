@@ -15,6 +15,7 @@ struct SoDoItApp: App {
         WindowGroup {
             ContentView()
                 .environment(\.managedObjectContext, coreDataManager.viewContext)
+                .dismissKeyboardOnTap()
         }
     }
 }

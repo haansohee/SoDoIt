@@ -44,6 +44,7 @@ struct ColorPaletteView: View {
                 .padding(4)
                 .contentShape(Circle())
         }
+        .buttonStyle(.borderless)
         .accessibilityLabel(preset.name)
     }
 }

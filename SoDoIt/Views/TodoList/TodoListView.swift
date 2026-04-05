@@ -26,6 +26,13 @@ struct TodoListView: View {
     var body: some View {
         NavigationStack {
             VStack(spacing: 0) {
+                SmartFilterBar(
+                    selectedFilter: todoListViewModel.smartFilter,
+                    onSelect: { filter in
+                        todoListViewModel.applySmartFilter(filter)
+                    }
+                )
+
                 if !todoListViewModel.categories.isEmpty {
                     CategoryFilterBar(
                         categories: todoListViewModel.categories,
@@ -38,11 +45,13 @@ struct TodoListView: View {
 
                 if todoListViewModel.todos.isEmpty {
                     ContentUnavailableView(
-                        todoListViewModel.filterCategory != nil ? "해당 카테고리에 할 일이 없습니다" : "할 일이 없습니다",
+                        emptyMessage,
                         systemImage: "checklist",
                         description: Text("+ 버튼을 눌러 새로운 할 일을 추가하세요")
                     )
                     .frame(maxHeight: .infinity)
+                } else if todoListViewModel.smartFilter == .completed {
+                    completedList
                 } else {
                     todoList
                 }
@@ -92,6 +101,29 @@ struct TodoListView: View {
         }
     }
     
+    // MARK: - 빈 상태 메시지
+    private var emptyMessage: String {
+        let categoryName = todoListViewModel.filterCategory?.name
+
+        switch (todoListViewModel.smartFilter, categoryName) {
+        case (.all, let name?):        return "\(name)에 할 일이 없습니다"
+        case (.today, let name?):      return "\(name)에 오늘 마감인 할 일이 없습니다"
+        case (.upcoming, let name?):   return "\(name)에 예정된 할 일이 없습니다"
+        case (.completed, let name?):  return "\(name)에 완료된 할 일이 없습니다"
+        case (.all, nil):              return "할 일이 없습니다"
+        case (.today, nil):            return "오늘 마감인 할 일이 없습니다"
+        case (.upcoming, nil):         return "예정된 할 일이 없습니다"
+        case (.completed, nil):        return "완료된 할 일이 없습니다"
+        }
+    }
+
+    // MARK: - 완료 필터 목록 (섹션 분리 없음)
+    private var completedList: some View {
+        List {
+            todoRows(todoListViewModel.todos)
+        }
+    }
+
     // MARK: - 할 일 목록
     private var todoList: some View {
         List {
@@ -99,22 +131,26 @@ struct TodoListView: View {
             todoSection(title: "완료됨", todos: todoListViewModel.completedTodos)
         }
     }
-    
+
     @ViewBuilder
     private func todoSection<T: RandomAccessCollection>(title: String, todos: T) -> some View where T.Element == TodoItem {
         if !todos.isEmpty {
             Section(title) {
-                ForEach(todos) { todo in
-                    NavigationLink(value: todo.objectID) {
-                        TodoRowView(todo: todo)
-                    }
-                    .swipeActions(edge: .leading) {
-                        toggleButton(for: todo)
-                    }
-                    .swipeActions(edge: .trailing) {
-                        deleteButton(for: todo)
-                    }
-                }
+                todoRows(todos)
+            }
+        }
+    }
+
+    private func todoRows<T: RandomAccessCollection>(_ todos: T) -> some View where T.Element == TodoItem {
+        ForEach(todos) { todo in
+            NavigationLink(value: todo.objectID) {
+                TodoRowView(todo: todo)
+            }
+            .swipeActions(edge: .leading) {
+                toggleButton(for: todo)
+            }
+            .swipeActions(edge: .trailing) {
+                deleteButton(for: todo)
             }
         }
     }

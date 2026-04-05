@@ -33,7 +33,7 @@ enum TodoListError: Identifiable {
         switch self {
         case .todoFetch:    "할 일 목록을 불러오는 중 오류가 발생했습니다."
         case .categoryFetch: "카테고리 목록을 불러오는 중 오류가 발생했습니다."
-        case .filter:       "카테고리 필터를 적용하는 중 오류가 발생했습니다."
+        case .filter:       "필터를 적용하는 중 오류가 발생했습니다."
         case .toggle:       "할 일의 완료 상태를 변경하지 못했습니다."
         case .delete:       "할 일을 삭제하지 못했습니다."
         }
@@ -45,6 +45,7 @@ final class TodoListViewModel: NSObject, NSFetchedResultsControllerDelegate {
     private(set) var todos: [TodoItem] = []
     private(set) var categories: [Category] = []
     var filterCategory: Category?
+    var smartFilter: SmartFilter = .all
     var activeError: TodoListError?
 
     private let fetchedResultsController: NSFetchedResultsController<TodoItem>
@@ -142,22 +143,53 @@ final class TodoListViewModel: NSObject, NSFetchedResultsControllerDelegate {
     }
 
     func applyFilter(_ category: Category?) {
-        let oldFilter = self.filterCategory
+        let newCategory = (filterCategory?.objectID == category?.objectID) ? nil : category
+        applyFilters(smartFilter: smartFilter, category: newCategory)
+    }
+
+    func applySmartFilter(_ filter: SmartFilter) {
+        applyFilters(smartFilter: filter, category: filterCategory)
+    }
+
+    private func applyFilters(smartFilter newSmartFilter: SmartFilter, category newCategory: Category?) {
         let oldPredicate = fetchedResultsController.fetchRequest.predicate
-        
-        let newFilter = (filterCategory?.objectID == category?.objectID) ? nil : category
-        filterCategory = newFilter
-        fetchedResultsController.fetchRequest.predicate = newFilter.map { NSPredicate(format: "category == %@", $0) }
-        
+
+        var predicates: [NSPredicate] = []
+
+        // 스마트 필터 predicate
+        switch newSmartFilter {
+        case .all:
+            break
+        case .today:
+            let calendar = Calendar.current
+            let startOfDay = calendar.startOfDay(for: Date())
+            guard let startOfTomorrow = calendar.date(byAdding: .day, value: 1, to: startOfDay) else { break }
+            predicates.append(NSPredicate(format: "dueDate >= %@ AND dueDate < %@ AND isCompleted == NO", startOfDay as NSDate, startOfTomorrow as NSDate))
+        case .upcoming:
+            let calendar = Calendar.current
+            guard let tomorrow = calendar.date(byAdding: .day, value: 1, to: calendar.startOfDay(for: Date())) else { break }
+            predicates.append(NSPredicate(format: "dueDate != nil AND dueDate >= %@ AND isCompleted == NO", tomorrow as NSDate))
+        case .completed:
+            predicates.append(NSPredicate(format: "isCompleted == YES"))
+        }
+
+        // 카테고리 필터 predicate
+        if let category = newCategory {
+            predicates.append(NSPredicate(format: "category == %@", category))
+        }
+
+        fetchedResultsController.fetchRequest.predicate = predicates.isEmpty ? nil : NSCompoundPredicate(andPredicateWithSubpredicates: predicates)
+
         do {
             try fetchedResultsController.performFetch()
+            smartFilter = newSmartFilter
+            filterCategory = newCategory
+            todos = fetchedResultsController.fetchedObjects ?? []
         } catch {
-            // Revert state on failure
-            filterCategory = oldFilter
             fetchedResultsController.fetchRequest.predicate = oldPredicate
-            
+
             activeError = .filter
-            Logger(subsystem: Bundle.main.bundleIdentifier!, category: "TodoListViewModel").error("TodoListViewModel 필터 적용 실패: \(error)")
+            Logger(subsystem: Bundle.main.bundleIdentifier!, category: "TodoListViewModel").error("필터 적용 실패: \(error)")
         }
     }
 
