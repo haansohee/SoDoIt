@@ -84,6 +84,19 @@ struct TodoListView: View {
             }
             .toolbar {
                 ToolbarItem(placement: .topBarTrailing) {
+                    Menu {
+                        ForEach(SortOption.allCases, id: \.self) { option in
+                            Button {
+                                todoListViewModel.applySortOption(option)
+                            } label: {
+                                Label(option.label, systemImage: sortMenuIcon(for: option))
+                            }
+                        }
+                    } label: {
+                        Image(systemName: "arrow.up.arrow.down")
+                    }
+                }
+                ToolbarItem(placement: .topBarTrailing) {
                     Button {
                         activeSheet = .addTodo
                     } label: {
@@ -175,6 +188,14 @@ struct TodoListView: View {
         } label: {
             Image(systemName: "trash")
         }
+    }
+
+    // MARK: - 정렬 메뉴 아이콘
+    private func sortMenuIcon(for option: SortOption) -> String {
+        guard todoListViewModel.sortOption == option else {
+            return option.icon
+        }
+        return todoListViewModel.isSortAscending ? "chevron.up" : "chevron.down"
     }
 }
 
