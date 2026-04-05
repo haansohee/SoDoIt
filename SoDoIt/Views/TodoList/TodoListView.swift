@@ -120,17 +120,7 @@ struct TodoListView: View {
     // MARK: - 완료 필터 목록 (섹션 분리 없음)
     private var completedList: some View {
         List {
-            ForEach(todoListViewModel.todos) { todo in
-                NavigationLink(value: todo.objectID) {
-                    TodoRowView(todo: todo)
-                }
-                .swipeActions(edge: .leading) {
-                    toggleButton(for: todo)
-                }
-                .swipeActions(edge: .trailing) {
-                    deleteButton(for: todo)
-                }
-            }
+            todoRows(todoListViewModel.todos)
         }
     }
 
@@ -141,22 +131,26 @@ struct TodoListView: View {
             todoSection(title: "완료됨", todos: todoListViewModel.completedTodos)
         }
     }
-    
+
     @ViewBuilder
     private func todoSection<T: RandomAccessCollection>(title: String, todos: T) -> some View where T.Element == TodoItem {
         if !todos.isEmpty {
             Section(title) {
-                ForEach(todos) { todo in
-                    NavigationLink(value: todo.objectID) {
-                        TodoRowView(todo: todo)
-                    }
-                    .swipeActions(edge: .leading) {
-                        toggleButton(for: todo)
-                    }
-                    .swipeActions(edge: .trailing) {
-                        deleteButton(for: todo)
-                    }
-                }
+                todoRows(todos)
+            }
+        }
+    }
+
+    private func todoRows<T: RandomAccessCollection>(_ todos: T) -> some View where T.Element == TodoItem {
+        ForEach(todos) { todo in
+            NavigationLink(value: todo.objectID) {
+                TodoRowView(todo: todo)
+            }
+            .swipeActions(edge: .leading) {
+                toggleButton(for: todo)
+            }
+            .swipeActions(edge: .trailing) {
+                deleteButton(for: todo)
             }
         }
     }
