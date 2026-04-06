@@ -16,6 +16,7 @@ enum TodoListError: Identifiable {
     case filter
     case toggle
     case delete
+    case sort
 
     var id: Self { self }
 
@@ -26,6 +27,7 @@ enum TodoListError: Identifiable {
         case .filter:       "필터 적용 실패"
         case .toggle:       "상태 변경 실패"
         case .delete:       "삭제 실패"
+        case .sort:         "정렬 실패"
         }
     }
 
@@ -36,6 +38,7 @@ enum TodoListError: Identifiable {
         case .filter:       "필터를 적용하는 중 오류가 발생했습니다."
         case .toggle:       "할 일의 완료 상태를 변경하지 못했습니다."
         case .delete:       "할 일을 삭제하지 못했습니다."
+        case .sort:         "정렬을 적용하는 중 오류가 발생했습니다."
         }
     }
 }
@@ -46,6 +49,8 @@ final class TodoListViewModel: NSObject, NSFetchedResultsControllerDelegate {
     private(set) var categories: [Category] = []
     var filterCategory: Category?
     var smartFilter: SmartFilter = .all
+    private(set) var sortOption: SortOption = .priority
+    private(set) var isSortAscending: Bool = true
     var activeError: TodoListError?
 
     private let fetchedResultsController: NSFetchedResultsController<TodoItem>
@@ -69,11 +74,7 @@ final class TodoListViewModel: NSObject, NSFetchedResultsControllerDelegate {
         self.repository = repository ?? TodoRepository(context: context)
 
         let request: NSFetchRequest<TodoItem> = TodoItem.fetchRequest()
-        request.sortDescriptors = [
-            NSSortDescriptor(keyPath: \TodoItem.isCompleted, ascending: true),
-            NSSortDescriptor(keyPath: \TodoItem.priority, ascending: true),
-            NSSortDescriptor(keyPath: \TodoItem.createdAt, ascending: false)
-        ]
+        request.sortDescriptors = Self.buildSortDescriptors(for: .priority, ascending: SortOption.priority.defaultAscending)
         fetchedResultsController = NSFetchedResultsController(
             fetchRequest: request,
             managedObjectContext: context,
@@ -98,10 +99,10 @@ final class TodoListViewModel: NSObject, NSFetchedResultsControllerDelegate {
 
         do {
             try fetchedResultsController.performFetch()
-            todos = fetchedResultsController.fetchedObjects ?? []
+            syncTodosFromFRC()
         } catch {
             activeError = .todoFetch
-            Logger(subsystem: Bundle.main.bundleIdentifier!, category: "TodoListViewModel").error("할 일 fetch 실패: \(error)")
+            Logger(subsystem: Bundle.main.bundleIdentifier ?? "sso.SoDoIt", category: "TodoListViewModel").error("할 일 fetch 실패: \(error)")
         }
 
         do {
@@ -109,7 +110,7 @@ final class TodoListViewModel: NSObject, NSFetchedResultsControllerDelegate {
             categories = categoryFRC.fetchedObjects ?? []
         } catch {
             activeError = .categoryFetch
-            Logger(subsystem: Bundle.main.bundleIdentifier!, category: "TodoListViewModel").error("카테고리 fetch 실패: \(error)")
+            Logger(subsystem: Bundle.main.bundleIdentifier ?? "sso.SoDoIt", category: "TodoListViewModel").error("카테고리 fetch 실패: \(error)")
         }
     }
 
@@ -125,7 +126,7 @@ final class TodoListViewModel: NSObject, NSFetchedResultsControllerDelegate {
             try repository.toggleTodoCompletion(todo)
         } catch {
             activeError = .toggle
-            Logger(subsystem: Bundle.main.bundleIdentifier!, category: "TodoListViewModel").error("완료 상태 변경 실패: \(error)")
+            Logger(subsystem: Bundle.main.bundleIdentifier ?? "sso.SoDoIt", category: "TodoListViewModel").error("완료 상태 변경 실패: \(error)")
         }
     }
 
@@ -134,7 +135,33 @@ final class TodoListViewModel: NSObject, NSFetchedResultsControllerDelegate {
             try repository.deleteTodo(todo)
         } catch {
             activeError = .delete
-            Logger(subsystem: Bundle.main.bundleIdentifier!, category: "TodoListViewModel").error("할 일 삭제 실패: \(error)")
+            Logger(subsystem: Bundle.main.bundleIdentifier ?? "sso.SoDoIt", category: "TodoListViewModel").error("할 일 삭제 실패: \(error)")
+        }
+    }
+
+    func applySortOption(_ option: SortOption) {
+        let oldOption = sortOption
+        let oldAscending = isSortAscending
+
+        if sortOption == option {
+            isSortAscending.toggle()
+        } else {
+            sortOption = option
+            isSortAscending = option.defaultAscending
+        }
+
+        let oldDescriptors = fetchedResultsController.fetchRequest.sortDescriptors
+        fetchedResultsController.fetchRequest.sortDescriptors = Self.buildSortDescriptors(for: sortOption, ascending: isSortAscending)
+
+        do {
+            try fetchedResultsController.performFetch()
+            syncTodosFromFRC()
+        } catch {
+            fetchedResultsController.fetchRequest.sortDescriptors = oldDescriptors
+            sortOption = oldOption
+            isSortAscending = oldAscending
+            activeError = .sort
+            Logger(subsystem: Bundle.main.bundleIdentifier ?? "sso.SoDoIt", category: "TodoListViewModel").error("정렬 적용 실패: \(error)")
         }
     }
 
@@ -184,20 +211,58 @@ final class TodoListViewModel: NSObject, NSFetchedResultsControllerDelegate {
             try fetchedResultsController.performFetch()
             smartFilter = newSmartFilter
             filterCategory = newCategory
-            todos = fetchedResultsController.fetchedObjects ?? []
+            syncTodosFromFRC()
         } catch {
             fetchedResultsController.fetchRequest.predicate = oldPredicate
 
             activeError = .filter
-            Logger(subsystem: Bundle.main.bundleIdentifier!, category: "TodoListViewModel").error("필터 적용 실패: \(error)")
+            Logger(subsystem: Bundle.main.bundleIdentifier ?? "sso.SoDoIt", category: "TodoListViewModel").error("필터 적용 실패: \(error)")
         }
+    }
+
+    private static func buildSortDescriptors(for option: SortOption, ascending: Bool) -> [NSSortDescriptor] {
+        var descriptors: [NSSortDescriptor] = [
+            NSSortDescriptor(keyPath: \TodoItem.isCompleted, ascending: true)
+        ]
+
+        switch option {
+        case .priority:
+            descriptors.append(NSSortDescriptor(keyPath: \TodoItem.priority, ascending: ascending))
+            descriptors.append(NSSortDescriptor(keyPath: \TodoItem.createdAt, ascending: false))
+        case .dueDate:
+            descriptors.append(NSSortDescriptor(keyPath: \TodoItem.dueDate, ascending: ascending))
+            descriptors.append(NSSortDescriptor(keyPath: \TodoItem.priority, ascending: true))
+            descriptors.append(NSSortDescriptor(keyPath: \TodoItem.createdAt, ascending: false))
+        case .createdDate:
+            descriptors.append(NSSortDescriptor(keyPath: \TodoItem.createdAt, ascending: ascending))
+        }
+
+        return descriptors
+    }
+
+    /// FRC 결과를 todos에 동기화. 마감일 정렬 시 dueDate가 nil인 항목을 각 섹션 맨 뒤로 이동.
+    private func syncTodosFromFRC() {
+        var items = fetchedResultsController.fetchedObjects ?? []
+
+        if sortOption == .dueDate {
+            let active = items.filter { !$0.isCompleted }
+            let completed = items.filter { $0.isCompleted }
+
+            func nilDueDateLast(_ group: [TodoItem]) -> [TodoItem] {
+                group.filter { $0.dueDate != nil } + group.filter { $0.dueDate == nil }
+            }
+
+            items = nilDueDateLast(active) + nilDueDateLast(completed)
+        }
+
+        todos = items
     }
 
     // MARK: - NSFetchedResultsControllerDelegate
 
     func controllerDidChangeContent(_ controller: NSFetchedResultsController<NSFetchRequestResult>) {
         if controller === fetchedResultsController {
-            todos = controller.fetchedObjects as? [TodoItem] ?? []
+            syncTodosFromFRC()
         } else if controller === categoryFRC {
             let newCategories = controller.fetchedObjects as? [Category] ?? []
             self.categories = newCategories
