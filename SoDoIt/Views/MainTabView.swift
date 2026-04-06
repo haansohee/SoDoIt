@@ -8,26 +8,36 @@
 import SwiftUI
 
 struct MainTabView: View {
+    private enum Tab {
+        case todo, stats, settings
+    }
+
+    @State private var selectedTab: Tab = .todo
+
     var body: some View {
-        TabView {
+        TabView(selection: $selectedTab) {
             TodoListView()
                 .tabItem {
                     Label("할 일", systemImage: "checklist")
                 }
+                .tag(Tab.todo)
 
             StatsView()
                 .tabItem {
                     Label("통계", systemImage: "chart.bar.fill")
                 }
+                .tag(Tab.stats)
 
             SettingsView()
                 .tabItem {
                     Label("설정", systemImage: "gearshape.fill")
                 }
+                .tag(Tab.settings)
         }
     }
 }
 
 #Preview {
     MainTabView()
+        .environment(\.managedObjectContext, CoreDataManager.preview.viewContext)
 }
