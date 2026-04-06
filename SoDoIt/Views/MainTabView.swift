@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct MainTabView: View {
-    private enum Tab {
+    private enum Tab: String, CaseIterable {
         case todo, stats, settings
     }
 
