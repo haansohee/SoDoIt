@@ -49,8 +49,8 @@ final class TodoListViewModel: NSObject, NSFetchedResultsControllerDelegate {
     private(set) var categories: [Category] = []
     var filterCategory: Category?
     var smartFilter: SmartFilter = .all
-    var sortOption: SortOption = .priority
-    var isSortAscending: Bool = true
+    private(set) var sortOption: SortOption = .priority
+    private(set) var isSortAscending: Bool = true
     var activeError: TodoListError?
 
     private let fetchedResultsController: NSFetchedResultsController<TodoItem>
@@ -102,7 +102,7 @@ final class TodoListViewModel: NSObject, NSFetchedResultsControllerDelegate {
             syncTodosFromFRC()
         } catch {
             activeError = .todoFetch
-            Logger(subsystem: Bundle.main.bundleIdentifier!, category: "TodoListViewModel").error("할 일 fetch 실패: \(error)")
+            Logger(subsystem: Bundle.main.bundleIdentifier ?? "sso.SoDoIt", category: "TodoListViewModel").error("할 일 fetch 실패: \(error)")
         }
 
         do {
@@ -110,7 +110,7 @@ final class TodoListViewModel: NSObject, NSFetchedResultsControllerDelegate {
             categories = categoryFRC.fetchedObjects ?? []
         } catch {
             activeError = .categoryFetch
-            Logger(subsystem: Bundle.main.bundleIdentifier!, category: "TodoListViewModel").error("카테고리 fetch 실패: \(error)")
+            Logger(subsystem: Bundle.main.bundleIdentifier ?? "sso.SoDoIt", category: "TodoListViewModel").error("카테고리 fetch 실패: \(error)")
         }
     }
 
@@ -126,7 +126,7 @@ final class TodoListViewModel: NSObject, NSFetchedResultsControllerDelegate {
             try repository.toggleTodoCompletion(todo)
         } catch {
             activeError = .toggle
-            Logger(subsystem: Bundle.main.bundleIdentifier!, category: "TodoListViewModel").error("완료 상태 변경 실패: \(error)")
+            Logger(subsystem: Bundle.main.bundleIdentifier ?? "sso.SoDoIt", category: "TodoListViewModel").error("완료 상태 변경 실패: \(error)")
         }
     }
 
@@ -135,7 +135,7 @@ final class TodoListViewModel: NSObject, NSFetchedResultsControllerDelegate {
             try repository.deleteTodo(todo)
         } catch {
             activeError = .delete
-            Logger(subsystem: Bundle.main.bundleIdentifier!, category: "TodoListViewModel").error("할 일 삭제 실패: \(error)")
+            Logger(subsystem: Bundle.main.bundleIdentifier ?? "sso.SoDoIt", category: "TodoListViewModel").error("할 일 삭제 실패: \(error)")
         }
     }
 
@@ -200,7 +200,7 @@ final class TodoListViewModel: NSObject, NSFetchedResultsControllerDelegate {
             fetchedResultsController.fetchRequest.predicate = oldPredicate
 
             activeError = .filter
-            Logger(subsystem: Bundle.main.bundleIdentifier!, category: "TodoListViewModel").error("필터 적용 실패: \(error)")
+            Logger(subsystem: Bundle.main.bundleIdentifier ?? "sso.SoDoIt", category: "TodoListViewModel").error("필터 적용 실패: \(error)")
         }
     }
 
@@ -214,7 +214,7 @@ final class TodoListViewModel: NSObject, NSFetchedResultsControllerDelegate {
         } catch {
             fetchedResultsController.fetchRequest.sortDescriptors = oldDescriptors
             activeError = .sort
-            Logger(subsystem: Bundle.main.bundleIdentifier!, category: "TodoListViewModel").error("정렬 적용 실패: \(error)")
+            Logger(subsystem: Bundle.main.bundleIdentifier ?? "sso.SoDoIt", category: "TodoListViewModel").error("정렬 적용 실패: \(error)")
         }
     }
 

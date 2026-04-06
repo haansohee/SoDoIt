@@ -94,6 +94,7 @@ struct TodoListView: View {
                         }
                     } label: {
                         Image(systemName: "arrow.up.arrow.down")
+                            .accessibilityLabel("정렬 옵션")
                     }
                 }
                 ToolbarItem(placement: .topBarTrailing) {
