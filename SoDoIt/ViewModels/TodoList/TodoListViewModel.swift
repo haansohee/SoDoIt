@@ -140,13 +140,29 @@ final class TodoListViewModel: NSObject, NSFetchedResultsControllerDelegate {
     }
 
     func applySortOption(_ option: SortOption) {
+        let oldOption = sortOption
+        let oldAscending = isSortAscending
+
         if sortOption == option {
             isSortAscending.toggle()
         } else {
             sortOption = option
             isSortAscending = option.defaultAscending
         }
-        updateSortDescriptors()
+
+        let oldDescriptors = fetchedResultsController.fetchRequest.sortDescriptors
+        fetchedResultsController.fetchRequest.sortDescriptors = Self.buildSortDescriptors(for: sortOption, ascending: isSortAscending)
+
+        do {
+            try fetchedResultsController.performFetch()
+            syncTodosFromFRC()
+        } catch {
+            fetchedResultsController.fetchRequest.sortDescriptors = oldDescriptors
+            sortOption = oldOption
+            isSortAscending = oldAscending
+            activeError = .sort
+            Logger(subsystem: Bundle.main.bundleIdentifier ?? "sso.SoDoIt", category: "TodoListViewModel").error("정렬 적용 실패: \(error)")
+        }
     }
 
     func todo(for objectID: NSManagedObjectID) -> TodoItem? {
@@ -204,20 +220,6 @@ final class TodoListViewModel: NSObject, NSFetchedResultsControllerDelegate {
         }
     }
 
-    private func updateSortDescriptors() {
-        let oldDescriptors = fetchedResultsController.fetchRequest.sortDescriptors
-        fetchedResultsController.fetchRequest.sortDescriptors = Self.buildSortDescriptors(for: sortOption, ascending: isSortAscending)
-
-        do {
-            try fetchedResultsController.performFetch()
-            syncTodosFromFRC()
-        } catch {
-            fetchedResultsController.fetchRequest.sortDescriptors = oldDescriptors
-            activeError = .sort
-            Logger(subsystem: Bundle.main.bundleIdentifier ?? "sso.SoDoIt", category: "TodoListViewModel").error("정렬 적용 실패: \(error)")
-        }
-    }
-
     private static func buildSortDescriptors(for option: SortOption, ascending: Bool) -> [NSSortDescriptor] {
         var descriptors: [NSSortDescriptor] = [
             NSSortDescriptor(keyPath: \TodoItem.isCompleted, ascending: true)
@@ -230,6 +232,7 @@ final class TodoListViewModel: NSObject, NSFetchedResultsControllerDelegate {
         case .dueDate:
             descriptors.append(NSSortDescriptor(keyPath: \TodoItem.dueDate, ascending: ascending))
             descriptors.append(NSSortDescriptor(keyPath: \TodoItem.priority, ascending: true))
+            descriptors.append(NSSortDescriptor(keyPath: \TodoItem.createdAt, ascending: false))
         case .createdDate:
             descriptors.append(NSSortDescriptor(keyPath: \TodoItem.createdAt, ascending: ascending))
         }
