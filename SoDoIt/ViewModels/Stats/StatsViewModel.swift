@@ -21,6 +21,13 @@ final class StatsViewModel {
     private(set) var weeklyCompletion: [(date: Date, count: Int)] = []
     private(set) var priorityDistribution: [(priority: Priority, count: Int)] = []
 
+    // MARK: - Display
+
+    var completionRateText: String {
+        let percent = Int((completionRate * 100).rounded())
+        return "\(percent)%"
+    }
+
     private let repository: StatisticsRepository
 
     init(repository: StatisticsRepository? = nil) {
@@ -39,7 +46,7 @@ final class StatsViewModel {
         todayCompletedCount = repository.completionCount(for: Date())
         totalCount = repository.totalCount()
         inProgressCount = repository.inProgressCount()
-        completionRate = repository.completionRate()
+        completionRate = totalCount > 0 ? Double(totalCount - inProgressCount) / Double(totalCount) : 0
         weeklyCompletion = repository.weeklyCompletionDate()
         priorityDistribution = repository.countByPriority()
     }

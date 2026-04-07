@@ -53,7 +53,7 @@ struct StatsView: View {
             )
             StatSummaryCard(
                 title: "완료율",
-                value: completionRateText,
+                value: viewModel.completionRateText,
                 systemImage: "chart.pie.fill",
                 tint: .purple
             )
@@ -66,10 +66,6 @@ struct StatsView: View {
         }
     }
 
-    private var completionRateText: String {
-        let percent = Int((viewModel.completionRate * 100).rounded())
-        return "\(percent)%"
-    }
 }
 
 #Preview {

@@ -24,7 +24,7 @@ struct PriorityDistributionChart: View {
                 emptyState
             } else {
                 Chart {
-                    ForEach(data, id: \.priority) { item in
+                    ForEach(data.reversed(), id: \.priority) { item in
                         BarMark(
                             x: .value("개수", item.count),
                             y: .value("우선순위", item.priority.title)
