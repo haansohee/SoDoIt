@@ -8,17 +8,70 @@
 import SwiftUI
 
 struct StatsView: View {
+    @State private var viewModel: StatsViewModel
+
+    private let columns = [
+        GridItem(.flexible(), spacing: 12),
+        GridItem(.flexible(), spacing: 12)
+    ]
+
+    init(viewModel: StatsViewModel = StatsViewModel()) {
+        _viewModel = State(wrappedValue: viewModel)
+    }
+
     var body: some View {
         NavigationStack {
-            ContentUnavailableView(
-                "통계 기능이 곧 추가됩니다",
-                systemImage: "chart.bar.fill"
-            )
+            ScrollView {
+                VStack(spacing: 16) {
+                    summarySection
+                    WeeklyCompletionChart(data: viewModel.weeklyCompletion)
+                    PriorityDistributionChart(data: viewModel.priorityDistribution)
+                }
+                .padding(16)
+            }
+            .background(Color(.systemGroupedBackground))
             .navigationTitle("통계")
+            .onAppear {
+                viewModel.refresh()
+            }
         }
+    }
+
+    private var summarySection: some View {
+        LazyVGrid(columns: columns, spacing: 12) {
+            StatSummaryCard(
+                title: "오늘 완료",
+                value: "\(viewModel.todayCompletedCount)",
+                systemImage: "checkmark.circle.fill",
+                tint: .green
+            )
+            StatSummaryCard(
+                title: "전체 할 일",
+                value: "\(viewModel.totalCount)",
+                systemImage: "list.bullet",
+                tint: .blue
+            )
+            StatSummaryCard(
+                title: "완료율",
+                value: completionRateText,
+                systemImage: "chart.pie.fill",
+                tint: .purple
+            )
+            StatSummaryCard(
+                title: "진행 중",
+                value: "\(viewModel.inProgressCount)",
+                systemImage: "hourglass",
+                tint: .orange
+            )
+        }
+    }
+
+    private var completionRateText: String {
+        let percent = Int((viewModel.completionRate * 100).rounded())
+        return "\(percent)%"
     }
 }
 
 #Preview {
-    StatsView()
+    StatsView(viewModel: StatsViewModel(preview: true))
 }

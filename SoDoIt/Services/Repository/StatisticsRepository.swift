@@ -47,4 +47,41 @@ final class StatisticsRepository {
             return (date: date, count: completionCount(for: date))
         }.reversed()
     }
+
+    /// 전체 할 일 개수
+    func totalCount() -> Int {
+        let request = TodoItem.fetchRequest()
+        return (try? context.count(for: request)) ?? 0
+    }
+
+    /// 완료된 전체 할 일 개수
+    func completedTotalCount() -> Int {
+        let request = TodoItem.fetchRequest()
+        request.predicate = NSPredicate(format: "isCompleted == YES")
+        return (try? context.count(for: request)) ?? 0
+    }
+
+    /// 진행 중(미완료) 할 일 개수
+    func inProgressCount() -> Int {
+        let request = TodoItem.fetchRequest()
+        request.predicate = NSPredicate(format: "isCompleted == NO")
+        return (try? context.count(for: request)) ?? 0
+    }
+
+    /// 전체 완료율 (0.0 ~ 1.0). 할 일이 없으면 0.
+    func completionRate() -> Double {
+        let total = totalCount()
+        guard total > 0 else { return 0 }
+        return Double(completedTotalCount()) / Double(total)
+    }
+
+    /// 우선순위별 할 일 개수 (높음/보통/낮음 순서)
+    func countByPriority() -> [(priority: Priority, count: Int)] {
+        Priority.allCases.map { priority in
+            let request = TodoItem.fetchRequest()
+            request.predicate = NSPredicate(format: "priority == %d", priority.rawValue)
+            let count = (try? context.count(for: request)) ?? 0
+            return (priority: priority, count: count)
+        }
+    }
 }
