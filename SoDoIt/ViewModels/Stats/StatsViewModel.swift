@@ -32,7 +32,6 @@ final class StatsViewModel {
 
     init(repository: StatisticsRepository? = nil) {
         self.repository = repository ?? StatisticsRepository()
-        refresh()
     }
 
     /// preview용 편의 이니셜라이저
