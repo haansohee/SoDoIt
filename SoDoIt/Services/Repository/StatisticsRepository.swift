@@ -100,7 +100,7 @@ final class StatisticsRepository {
     func completionRate() -> Double {
         let total = totalCount()
         guard total > 0 else { return 0 }
-        return Double(completedTotalCount()) / Double(total)
+        return total > 0 ? Double(completedTotalCount()) / Double(total) : 0.0
     }
 
     /// 우선순위별 할 일 개수 (높음/보통/낮음 순서)
