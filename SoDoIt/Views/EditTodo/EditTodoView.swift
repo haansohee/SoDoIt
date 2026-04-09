@@ -13,7 +13,8 @@ struct EditTodoView: View {
     @State private var viewModel: EditTodoViewModel
 
     init(todo: TodoItem) {
-        _viewModel = State(wrappedValue: EditTodoViewModel(todo: todo))
+        let context = todo.managedObjectContext ?? CoreDataManager.shared.viewContext
+        _viewModel = State(wrappedValue: EditTodoViewModel(todo: todo, context: context))
     }
 
     var body: some View {
