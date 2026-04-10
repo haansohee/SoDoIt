@@ -24,6 +24,11 @@ struct StatsView: View {
             ScrollView {
                 VStack(spacing: 16) {
                     summarySection
+                    CompletionRateChart(
+                        completedCount: viewModel.completedCount,
+                        inProgressCount: viewModel.inProgressCount,
+                        completionRate: viewModel.completionRate
+                    )
                     WeeklyCompletionChart(data: viewModel.weeklyCompletion)
                     PriorityDistributionChart(data: viewModel.priorityDistribution)
                 }

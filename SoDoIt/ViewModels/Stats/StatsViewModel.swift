@@ -23,6 +23,10 @@ final class StatsViewModel {
 
     // MARK: - Display
 
+    var completedCount: Int {
+        max(totalCount - inProgressCount, 0)
+    }
+
     var completionRateText: String {
         let percent = Int((completionRate * 100).rounded())
         return "\(percent)%"
