@@ -11,10 +11,13 @@ import Charts
 struct CompletionRateChart: View {
     let completedCount: Int
     let inProgressCount: Int
-    let completionRate: Double
 
     private var totalCount: Int {
         completedCount + inProgressCount
+    }
+
+    private var completionRate: Double {
+        totalCount > 0 ? Double(completedCount) / Double(totalCount) : 0
     }
 
     private var rateText: String {
@@ -110,13 +113,13 @@ struct CompletionRateChart: View {
 }
 
 #Preview("데이터 있음") {
-    CompletionRateChart(completedCount: 18, inProgressCount: 7, completionRate: 18.0 / 25.0)
+    CompletionRateChart(completedCount: 18, inProgressCount: 7)
         .padding()
         .background(Color(.systemGroupedBackground))
 }
 
 #Preview("데이터 없음") {
-    CompletionRateChart(completedCount: 0, inProgressCount: 0, completionRate: 0)
+    CompletionRateChart(completedCount: 0, inProgressCount: 0)
         .padding()
         .background(Color(.systemGroupedBackground))
 }

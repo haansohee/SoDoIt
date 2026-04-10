@@ -26,8 +26,7 @@ struct StatsView: View {
                     summarySection
                     CompletionRateChart(
                         completedCount: viewModel.completedCount,
-                        inProgressCount: viewModel.inProgressCount,
-                        completionRate: viewModel.completionRate
+                        inProgressCount: viewModel.inProgressCount
                     )
                     WeeklyCompletionChart(data: viewModel.weeklyCompletion)
                     PriorityDistributionChart(data: viewModel.priorityDistribution)
