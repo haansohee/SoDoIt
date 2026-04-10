@@ -49,7 +49,7 @@ final class StatsViewModel {
         todayCompletedCount = repository.completionCount(for: Date())
         totalCount = repository.totalCount()
         inProgressCount = repository.inProgressCount()
-        completionRate = totalCount > 0 ? Double(totalCount - inProgressCount) / Double(totalCount) : 0
+        completionRate = totalCount > 0 ? Double(completedCount) / Double(totalCount) : 0
         weeklyCompletion = repository.weeklyCompletionDate()
         priorityDistribution = repository.countByPriority()
     }
