@@ -19,10 +19,12 @@ struct CategoryListView: View {
         NavigationStack {
             Group {
                 if categoryListViewModel.categories.isEmpty {
-                    ContentUnavailableView(
-                        "카테고리가 없습니다",
+                    EmptyStateView(
+                        title: "카테고리가 없습니다",
                         systemImage: "folder",
-                        description: Text("+ 버튼을 눌러 새로운 카테고리를 추가하세요")
+                        description: "할 일을 분류할 카테고리를 추가해 보세요",
+                        actionTitle: "카테고리 추가",
+                        action: { showingAddCategory = true }
                     )
                 } else {
                     categoryList

@@ -44,10 +44,13 @@ struct TodoListView: View {
                 }
 
                 if todoListViewModel.todos.isEmpty {
-                    ContentUnavailableView(
-                        emptyMessage,
+                    let showAddAction = todoListViewModel.smartFilter == .all
+                    EmptyStateView(
+                        title: emptyMessage,
                         systemImage: "checklist",
-                        description: Text("+ 버튼을 눌러 새로운 할 일을 추가하세요")
+                        description: showAddAction ? nil : "다른 필터를 선택해 보세요",
+                        actionTitle: showAddAction ? "할 일 추가" : nil,
+                        action: showAddAction ? { activeSheet = .addTodo } : nil
                     )
                     .frame(maxHeight: .infinity)
                 } else if todoListViewModel.smartFilter == .completed {
