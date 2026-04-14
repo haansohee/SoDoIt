@@ -37,6 +37,14 @@ final class SettingsViewModel {
         self.categoryRepository = categoryRepository
     }
 
+    /// preview용 편의 이니셜라이저
+    convenience init(preview: Bool) {
+        self.init(
+            todoRepository: TodoRepository(context: CoreDataManager.preview.viewContext),
+            categoryRepository: CategoryRepository(context: CoreDataManager.preview.viewContext)
+        )
+    }
+
     /// 모든 할 일과 카테고리를 삭제합니다.
     func resetAllData() {
         isResetting = true
