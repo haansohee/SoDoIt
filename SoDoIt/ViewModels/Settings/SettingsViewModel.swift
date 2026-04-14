@@ -11,10 +11,6 @@ import OSLog
 
 @Observable
 final class SettingsViewModel {
-    enum ResetError: Error {
-        case failed
-    }
-
     private(set) var isResetting: Bool = false
     var resetError: String?
 
@@ -46,9 +42,11 @@ final class SettingsViewModel {
     }
 
     /// 모든 할 일과 카테고리를 삭제합니다.
-    func resetAllData() {
+    func resetAllData() async {
         isResetting = true
         defer { isResetting = false }
+
+        await Task.yield()
 
         do {
             try todoRepository.deleteAllTodos()

@@ -85,15 +85,10 @@ final class TodoRepository {
         let request: NSFetchRequest<NSFetchRequestResult> = TodoItem.fetchRequest()
         let batchDelete = NSBatchDeleteRequest(fetchRequest: request)
         batchDelete.resultType = .resultTypeObjectIDs
-        do {
-            let result = try context.execute(batchDelete) as? NSBatchDeleteResult
-            if let objectIDs = result?.result as? [NSManagedObjectID] {
-                let changes = [NSDeletedObjectsKey: objectIDs]
-                NSManagedObjectContext.mergeChanges(fromRemoteContextSave: changes, into: [context])
-            }
-        } catch {
-            context.rollback()
-            throw error
+        let result = try context.execute(batchDelete) as? NSBatchDeleteResult
+        if let objectIDs = result?.result as? [NSManagedObjectID] {
+            let changes = [NSDeletedObjectsKey: objectIDs]
+            NSManagedObjectContext.mergeChanges(fromRemoteContextSave: changes, into: [context])
         }
     }
 

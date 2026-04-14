@@ -29,7 +29,9 @@ struct SettingsView: View {
                 titleVisibility: .visible
             ) {
                 Button("모든 데이터 삭제", role: .destructive) {
-                    viewModel.resetAllData()
+                    Task {
+                        await viewModel.resetAllData()
+                    }
                 }
                 Button("취소", role: .cancel) {}
             } message: {
