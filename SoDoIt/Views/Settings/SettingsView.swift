@@ -75,8 +75,10 @@ struct SettingsView: View {
 
     private var supportSection: some View {
         Section("지원") {
-            Link(destination: URL(string: "mailto:feedback@sodoit.app")!) {
-                Label("피드백 보내기", systemImage: "envelope")
+            if let feedbackURL = URL(string: "mailto:feedback@sodoit.app") {
+                Link(destination: feedbackURL) {
+                    Label("피드백 보내기", systemImage: "envelope")
+                }
             }
         }
     }

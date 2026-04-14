@@ -23,7 +23,7 @@ final class SettingsViewModel {
 
     private let todoRepository: TodoRepository
     private let categoryRepository: CategoryRepository
-    private let logger = Logger(subsystem: "sso.SoDoIt", category: "Settings")
+    private let logger = Logger(subsystem: Bundle.main.bundleIdentifier ?? "sso.SoDoIt", category: "Settings")
 
     init(
         todoRepository: TodoRepository = TodoRepository(),
