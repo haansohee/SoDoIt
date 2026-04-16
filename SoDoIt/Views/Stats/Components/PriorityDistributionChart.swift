@@ -56,10 +56,16 @@ struct PriorityDistributionChart: View {
     }
 
     private var emptyState: some View {
-        Text("등록된 할 일이 없습니다")
-            .font(.subheadline)
-            .foregroundStyle(.secondary)
-            .frame(maxWidth: .infinity, minHeight: 140)
+        VStack(spacing: 8) {
+            Image(systemName: "chart.bar.xaxis")
+                .font(.title2)
+                .foregroundStyle(.secondary)
+                .accessibilityHidden(true)
+            Text("등록된 할 일이 없습니다")
+                .font(.subheadline)
+                .foregroundStyle(.secondary)
+        }
+        .frame(maxWidth: .infinity, minHeight: 140)
     }
 }
 
