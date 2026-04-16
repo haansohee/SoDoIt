@@ -43,21 +43,29 @@ struct TodoListView: View {
                     )
                 }
 
-                if todoListViewModel.todos.isEmpty {
-                    let showAddAction = todoListViewModel.smartFilter == .all
-                    EmptyStateView(
-                        title: emptyMessage,
-                        systemImage: "checklist",
-                        description: showAddAction ? nil : "다른 필터를 선택해 보세요",
-                        actionTitle: showAddAction ? "할 일 추가" : nil,
-                        action: showAddAction ? { activeSheet = .addTodo } : nil
-                    )
-                    .frame(maxHeight: .infinity)
-                } else if todoListViewModel.smartFilter == .completed {
-                    completedList
-                } else {
-                    todoList
+                Group {
+                    if todoListViewModel.todos.isEmpty {
+                        let showAddAction = todoListViewModel.smartFilter == .all
+                        EmptyStateView(
+                            title: emptyMessage,
+                            systemImage: "checklist",
+                            description: showAddAction ? nil : "다른 필터를 선택해 보세요",
+                            actionTitle: showAddAction ? "할 일 추가" : nil,
+                            action: showAddAction ? { activeSheet = .addTodo } : nil
+                        )
+                        .frame(maxHeight: .infinity)
+                        .transition(.opacity.combined(with: .scale(scale: 0.96)))
+                    } else if todoListViewModel.smartFilter == .completed {
+                        completedList
+                            .transition(.opacity)
+                    } else {
+                        todoList
+                            .transition(.opacity)
+                    }
                 }
+                .animation(AppAnimation.listTransition, value: todoListViewModel.todos.isEmpty)
+                .animation(AppAnimation.listTransition, value: todoListViewModel.smartFilter)
+                .animation(AppAnimation.listTransition, value: todoListViewModel.filterCategory?.objectID)
             }
             .navigationDestination(for: NSManagedObjectID.self) { objectID in
                 if let todo = todoListViewModel.todo(for: objectID) {
