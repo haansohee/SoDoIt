@@ -29,7 +29,7 @@ struct TodoListView: View {
                 SmartFilterBar(
                     selectedFilter: todoListViewModel.smartFilter,
                     onSelect: { filter in
-                        withAnimation(.easeInOut(duration: 0.25)) {
+                        withAnimation(AppAnimation.listTransition) {
                             todoListViewModel.applySmartFilter(filter)
                         }
                     }
@@ -40,7 +40,7 @@ struct TodoListView: View {
                         categories: todoListViewModel.categories,
                         selectedCategory: todoListViewModel.filterCategory,
                         onSelect: { category in
-                            withAnimation(.easeInOut(duration: 0.25)) {
+                            withAnimation(AppAnimation.listTransition) {
                                 todoListViewModel.applyFilter(category)
                             }
                         }
@@ -67,8 +67,8 @@ struct TodoListView: View {
                             .transition(.opacity)
                     }
                 }
-                .animation(.easeInOut(duration: 0.25), value: todoListViewModel.todos.isEmpty)
-                .animation(.easeInOut(duration: 0.25), value: todoListViewModel.smartFilter)
+                .animation(AppAnimation.listTransition, value: todoListViewModel.todos.isEmpty)
+                .animation(AppAnimation.listTransition, value: todoListViewModel.smartFilter)
             }
             .navigationDestination(for: NSManagedObjectID.self) { objectID in
                 if let todo = todoListViewModel.todo(for: objectID) {

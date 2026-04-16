@@ -32,7 +32,7 @@ struct CategoryListView: View {
                         .transition(.opacity)
                 }
             }
-            .animation(.easeInOut(duration: 0.25), value: categoryListViewModel.categories.isEmpty)
+            .animation(AppAnimation.listTransition, value: categoryListViewModel.categories.isEmpty)
             .navigationTitle("카테고리")
             .sheet(isPresented: $showingAddCategory) {
                 AddCategoryView()

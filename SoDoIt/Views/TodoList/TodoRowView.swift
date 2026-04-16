@@ -10,7 +10,8 @@ import CoreData
 
 struct TodoRowView: View {
     @ObservedObject var todo: TodoItem
-    
+    @Environment(\.accessibilityReduceMotion) private var reduceMotion
+
     var body: some View {
         HStack(spacing: 12) {
             // 우선순위 인디케이터
@@ -23,7 +24,7 @@ struct TodoRowView: View {
                 Text(todo.title)
                     .strikethrough(todo.isCompleted)
                     .foregroundStyle(todo.isCompleted ? .secondary : .primary)
-                    .animation(.easeInOut(duration: 0.2), value: todo.isCompleted)
+                    .animation(reduceMotion ? nil : AppAnimation.rowStateChange, value: todo.isCompleted)
 
                 HStack(spacing: 6) {
                     if let dueDate = todo.dueDate {
@@ -38,14 +39,25 @@ struct TodoRowView: View {
             Spacer()
 
             // 체크마크
-            Image(systemName: todo.isCompleted ? "checkmark.circle.fill" : "circle")
-                .foregroundStyle(todo.isCompleted ? .green : .gray)
-                .imageScale(.large)
-                .contentTransition(.symbolEffect(.replace))
-                .symbolEffect(.bounce, value: todo.isCompleted)
-                .animation(.easeInOut(duration: 0.2), value: todo.isCompleted)
+            checkmark
         }
         .padding(.vertical, 4)
+    }
+
+    @ViewBuilder
+    private var checkmark: some View {
+        let image = Image(systemName: todo.isCompleted ? "checkmark.circle.fill" : "circle")
+            .foregroundStyle(todo.isCompleted ? .green : .gray)
+            .imageScale(.large)
+            .contentTransition(.symbolEffect(.replace))
+
+        if reduceMotion {
+            image
+        } else {
+            image
+                .symbolEffect(.bounce, value: todo.isCompleted)
+                .animation(AppAnimation.rowStateChange, value: todo.isCompleted)
+        }
     }
     
     // MARK: - 마감일 뱃지
