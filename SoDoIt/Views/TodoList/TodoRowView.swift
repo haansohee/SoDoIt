@@ -17,13 +17,14 @@ struct TodoRowView: View {
             Circle()
                 .fill(todo.priorityLevel.color)
                 .frame(width: 10, height: 10)
-            
+
             // 제목 + 뱃지
             VStack(alignment: .leading, spacing: 4) {
                 Text(todo.title)
                     .strikethrough(todo.isCompleted)
                     .foregroundStyle(todo.isCompleted ? .secondary : .primary)
-                
+                    .animation(.easeInOut(duration: 0.2), value: todo.isCompleted)
+
                 HStack(spacing: 6) {
                     if let dueDate = todo.dueDate {
                         dueDateBadge(dueDate)
@@ -33,13 +34,16 @@ struct TodoRowView: View {
                     }
                 }
             }
-            
+
             Spacer()
-            
+
             // 체크마크
             Image(systemName: todo.isCompleted ? "checkmark.circle.fill" : "circle")
                 .foregroundStyle(todo.isCompleted ? .green : .gray)
                 .imageScale(.large)
+                .contentTransition(.symbolEffect(.replace))
+                .symbolEffect(.bounce, value: todo.isCompleted)
+                .animation(.easeInOut(duration: 0.2), value: todo.isCompleted)
         }
         .padding(.vertical, 4)
     }

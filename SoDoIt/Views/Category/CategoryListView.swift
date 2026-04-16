@@ -26,10 +26,13 @@ struct CategoryListView: View {
                         actionTitle: "카테고리 추가",
                         action: { showingAddCategory = true }
                     )
+                    .transition(.opacity.combined(with: .scale(scale: 0.96)))
                 } else {
                     categoryList
+                        .transition(.opacity)
                 }
             }
+            .animation(.easeInOut(duration: 0.25), value: categoryListViewModel.categories.isEmpty)
             .navigationTitle("카테고리")
             .sheet(isPresented: $showingAddCategory) {
                 AddCategoryView()
