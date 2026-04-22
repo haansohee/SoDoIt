@@ -16,6 +16,9 @@ struct SoDoItApp: App {
             ContentView()
                 .environment(\.managedObjectContext, coreDataManager.viewContext)
                 .dismissKeyboardOnTap()
+                .onAppear {
+                    NotificationManager.shared.requestAuthorization()
+                }
         }
     }
 }

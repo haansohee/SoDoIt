@@ -124,6 +124,13 @@ final class TodoListViewModel: NSObject, NSFetchedResultsControllerDelegate {
     func toggleCompletion(_ todo: TodoItem) {
         do {
             try repository.toggleTodoCompletion(todo)
+            if todo.isCompleted {
+                NotificationManager.shared.cancelNotification(for: todo.id)
+            } else if let dueDate = todo.dueDate {
+                NotificationManager.shared.scheduleDueDateNotification(
+                    for: todo.id, title: todo.title, dueDate: dueDate
+                )
+            }
         } catch {
             activeError = .toggle
             Logger(subsystem: Bundle.main.bundleIdentifier ?? "sso.SoDoIt", category: "TodoListViewModel").error("완료 상태 변경 실패: \(error)")
@@ -131,6 +138,7 @@ final class TodoListViewModel: NSObject, NSFetchedResultsControllerDelegate {
     }
 
     func delete(_ todo: TodoItem) {
+        NotificationManager.shared.cancelNotification(for: todo.id)
         do {
             try repository.deleteTodo(todo)
         } catch {
