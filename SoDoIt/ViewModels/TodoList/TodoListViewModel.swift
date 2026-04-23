@@ -138,9 +138,10 @@ final class TodoListViewModel: NSObject, NSFetchedResultsControllerDelegate {
     }
 
     func delete(_ todo: TodoItem) {
-        NotificationManager.shared.cancelNotification(for: todo.id)
+        let todoID = todo.id
         do {
             try repository.deleteTodo(todo)
+            NotificationManager.shared.cancelNotification(for: todoID)
         } catch {
             activeError = .delete
             Logger(subsystem: Bundle.main.bundleIdentifier ?? "sso.SoDoIt", category: "TodoListViewModel").error("할 일 삭제 실패: \(error)")

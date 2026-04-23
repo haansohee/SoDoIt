@@ -47,7 +47,7 @@ final class EditTodoViewModel: TodoFormViewModel {
             )
             let notifications = NotificationManager.shared
             notifications.cancelNotification(for: todo.id)
-            if formState.hasDueDate {
+            if formState.hasDueDate, !todo.isCompleted {
                 notifications.scheduleDueDateNotification(
                     for: todo.id,
                     title: formState.title.trimmingCharacters(in: .whitespacesAndNewlines),
