@@ -8,22 +8,33 @@
 import UserNotifications
 import OSLog
 
-final class NotificationManager {
+final class NotificationManager: NSObject, UNUserNotificationCenterDelegate {
     static let shared = NotificationManager()
 
     private let center = UNUserNotificationCenter.current()
     private let logger = Logger(subsystem: Bundle.main.bundleIdentifier ?? "sso.SoDoIt", category: "Notification")
 
-    private init() {}
-
-    // MARK: - 권한 요청
-
-    func requestAuthorization() {
-        center.requestAuthorization(options: [.alert, .sound, .badge]) { granted, error in
-            if let error {
-                self.logger.error("알림 권한 요청 실패: \(error.localizedDescription)")
+    private override init() {
+        super.init()
+        center.delegate = self
+        center.getNotificationSettings { settings in
+            if settings.authorizationStatus == .notDetermined {
+                self.center.requestAuthorization(options: [.alert, .sound, .badge]) { _, error in
+                    if let error {
+                        self.logger.error("알림 권한 요청 실패: \(error.localizedDescription)")
+                    }
+                }
             }
         }
+    }
+
+    // MARK: - UNUserNotificationCenterDelegate
+
+    func userNotificationCenter(
+        _ center: UNUserNotificationCenter,
+        willPresent notification: UNNotification
+    ) async -> UNNotificationPresentationOptions {
+        [.banner, .sound]
     }
 
     // MARK: - 알림 스케줄링
@@ -58,11 +69,14 @@ final class NotificationManager {
     // MARK: - 알림 취소
 
     func cancelNotification(for todoID: UUID) {
-        center.removePendingNotificationRequests(withIdentifiers: [notificationID(for: todoID)])
+        let identifier = notificationID(for: todoID)
+        center.removePendingNotificationRequests(withIdentifiers: [identifier])
+        center.removeDeliveredNotifications(withIdentifiers: [identifier])
     }
 
     func cancelAllNotifications() {
         center.removeAllPendingNotificationRequests()
+        center.removeAllDeliveredNotifications()
     }
 
     // MARK: - Private
