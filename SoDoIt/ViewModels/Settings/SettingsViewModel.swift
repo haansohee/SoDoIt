@@ -50,8 +50,8 @@ final class SettingsViewModel {
 
         do {
             try todoRepository.deleteAllTodos()
-            try categoryRepository.deleteAllCategories()
             NotificationManager.shared.cancelAllNotifications()
+            try categoryRepository.deleteAllCategories()
         } catch {
             logger.error("데이터 초기화 실패: \(error.localizedDescription)")
             resetError = "데이터 초기화에 실패했습니다. 다시 시도해 주세요."
