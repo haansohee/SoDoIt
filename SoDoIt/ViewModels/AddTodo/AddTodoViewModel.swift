@@ -40,6 +40,7 @@ final class AddTodoViewModel: TodoFormViewModel {
                     dueDate: formState.dueDate
                 )
             }
+            WidgetDataManager.shared.updateWidgetData()
         } catch {
             showSaveError = true
             throw error
