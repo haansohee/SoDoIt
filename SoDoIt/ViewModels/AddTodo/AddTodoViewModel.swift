@@ -26,13 +26,20 @@ final class AddTodoViewModel: TodoFormViewModel {
 
     func save() throws {
         do {
-            try repository.createTodo(
+            let todo = try repository.createTodo(
                 title: formState.title.trimmingCharacters(in: .whitespacesAndNewlines),
                 memo: formState.memo.isEmpty ? nil : formState.memo,
                 dueDate: formState.hasDueDate ? formState.dueDate : nil,
                 priority: formState.priority,
                 category: formState.selectedCategory
             )
+            if formState.hasDueDate {
+                NotificationManager.shared.scheduleDueDateNotification(
+                    for: todo.id,
+                    title: todo.title,
+                    dueDate: formState.dueDate
+                )
+            }
         } catch {
             showSaveError = true
             throw error

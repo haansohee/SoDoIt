@@ -10,6 +10,7 @@ import SwiftUI
 @main
 struct SoDoItApp: App {
     let coreDataManager = CoreDataManager.shared
+    let notificationManager = NotificationManager.shared
 
     var body: some Scene {
         WindowGroup {

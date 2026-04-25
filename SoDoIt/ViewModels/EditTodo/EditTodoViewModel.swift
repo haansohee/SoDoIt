@@ -45,6 +45,15 @@ final class EditTodoViewModel: TodoFormViewModel {
                 priority: formState.priority,
                 category: formState.selectedCategory
             )
+            let notifications = NotificationManager.shared
+            notifications.cancelNotification(for: todo.id)
+            if formState.hasDueDate, !todo.isCompleted {
+                notifications.scheduleDueDateNotification(
+                    for: todo.id,
+                    title: formState.title.trimmingCharacters(in: .whitespacesAndNewlines),
+                    dueDate: formState.dueDate
+                )
+            }
         } catch {
             showSaveError = true
             throw error
