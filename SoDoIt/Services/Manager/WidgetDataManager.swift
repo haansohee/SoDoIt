@@ -29,11 +29,13 @@ final class WidgetDataManager {
         }
 
         let encoder = JSONEncoder()
-        if let todosData = try? encoder.encode(todos) {
+        do {
+            let todosData = try encoder.encode(todos)
             defaults.set(todosData, forKey: AppGroup.todosKey)
-        }
-        if let statsData = try? encoder.encode(stats) {
+            let statsData = try encoder.encode(stats)
             defaults.set(statsData, forKey: AppGroup.statsKey)
+        } catch {
+            logger.error("위젯 데이터 인코딩 실패: \(error.localizedDescription)")
         }
 
         WidgetCenter.shared.reloadAllTimelines()
@@ -81,7 +83,7 @@ final class WidgetDataManager {
         completedRequest.predicate = NSPredicate(format: "isCompleted == YES")
 
         let todayStart = Calendar.current.startOfDay(for: Date())
-        let todayEnd = Calendar.current.date(byAdding: .day, value: 1, to: todayStart)!
+        let todayEnd = Calendar.current.date(byAdding: .day, value: 1, to: todayStart) ?? todayStart.addingTimeInterval(86400)
         let todayRequest = TodoItem.fetchRequest()
         todayRequest.predicate = NSPredicate(
             format: "isCompleted == YES AND completedAt >= %@ AND completedAt < %@",

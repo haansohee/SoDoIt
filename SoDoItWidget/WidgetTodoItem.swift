@@ -1,8 +1,11 @@
 //
 //  WidgetTodoItem.swift
-//  SoDoIt
+//  SoDoItWidget
 //
 //  Created by 한소희 on 4/25/26.
+//
+//  NOTE: SoDoIt/Models/WidgetTodoItem.swift의 복사본입니다.
+//  두 파일의 구조체 정의를 동일하게 유지해야 합니다.
 //
 
 import Foundation
