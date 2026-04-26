@@ -20,7 +20,7 @@ final class WidgetDataManager {
 
     /// 위젯에 표시할 데이터를 App Group UserDefaults에 저장하고 위젯 타임라인을 갱신합니다.
     func updateWidgetData(context: NSManagedObjectContext = CoreDataManager.shared.viewContext) {
-        let todos = fetchTodayTodos(context: context)
+        let todos = fetchIncompleteTodos(context: context)
         let stats = fetchStats(context: context)
 
         guard let defaults = AppGroup.sharedDefaults else {
@@ -38,19 +38,19 @@ final class WidgetDataManager {
             logger.error("위젯 데이터 인코딩 실패: \(error.localizedDescription)")
         }
 
-        WidgetCenter.shared.reloadAllTimelines()
+        WidgetCenter.shared.reloadTimelines(ofKind: "TodoListWidget")
     }
 
     /// 위젯 데이터를 모두 제거합니다 (데이터 초기화 시 사용).
     func clearWidgetData() {
         AppGroup.sharedDefaults?.removeObject(forKey: AppGroup.todosKey)
         AppGroup.sharedDefaults?.removeObject(forKey: AppGroup.statsKey)
-        WidgetCenter.shared.reloadAllTimelines()
+        WidgetCenter.shared.reloadTimelines(ofKind: "TodoListWidget")
     }
 
     // MARK: - Private
 
-    private func fetchTodayTodos(context: NSManagedObjectContext) -> [WidgetTodoItem] {
+    private func fetchIncompleteTodos(context: NSManagedObjectContext) -> [WidgetTodoItem] {
         let request = TodoItem.fetchRequest()
         request.predicate = NSPredicate(format: "isCompleted == NO")
         request.sortDescriptors = [
