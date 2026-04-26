@@ -30,7 +30,7 @@ struct TodoWidgetEntryView: View {
         VStack(alignment: .leading, spacing: 8) {
             HStack {
                 Image(systemName: "checklist")
-                    .foregroundStyle(.accent)
+                    .foregroundStyle(Color.accentColor)
                 Text("할 일")
                     .font(.headline)
                 Spacer()
@@ -61,7 +61,7 @@ struct TodoWidgetEntryView: View {
         VStack(alignment: .leading, spacing: 6) {
             HStack {
                 Image(systemName: "checklist")
-                    .foregroundStyle(.accent)
+                    .foregroundStyle(Color.accentColor)
                 Text("오늘의 할 일")
                     .font(.headline)
                 Spacer()
