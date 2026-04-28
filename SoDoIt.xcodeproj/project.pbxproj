@@ -6,11 +6,63 @@
 	objectVersion = 77;
 	objects = {
 
+/* Begin PBXBuildFile section */
+		F50FAB2A2F9CBB5300A5BF6E /* WidgetKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F50FAB292F9CBB5300A5BF6E /* WidgetKit.framework */; };
+		F50FAB2C2F9CBB5300A5BF6E /* SwiftUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F50FAB2B2F9CBB5300A5BF6E /* SwiftUI.framework */; };
+		F50FAB3B2F9CBB5400A5BF6E /* SoDoItWidgetExtension.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = F50FAB272F9CBB5300A5BF6E /* SoDoItWidgetExtension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		F50FAB392F9CBB5400A5BF6E /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = F52351B22F1CC20A006BDA04 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = F50FAB262F9CBB5300A5BF6E;
+			remoteInfo = SoDoItWidgetExtension;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		F50FAB402F9CBB5400A5BF6E /* Embed Foundation Extensions */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 13;
+			files = (
+				F50FAB3B2F9CBB5400A5BF6E /* SoDoItWidgetExtension.appex in Embed Foundation Extensions */,
+			);
+			name = "Embed Foundation Extensions";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
+
 /* Begin PBXFileReference section */
+		F50FAB272F9CBB5300A5BF6E /* SoDoItWidgetExtension.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = SoDoItWidgetExtension.appex; sourceTree = BUILT_PRODUCTS_DIR; };
+		F50FAB292F9CBB5300A5BF6E /* WidgetKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = WidgetKit.framework; path = System/Library/Frameworks/WidgetKit.framework; sourceTree = SDKROOT; };
+		F50FAB2B2F9CBB5300A5BF6E /* SwiftUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SwiftUI.framework; path = System/Library/Frameworks/SwiftUI.framework; sourceTree = SDKROOT; };
+		F50FABD42F9CD52700A5BF6E /* SoDoItWidgetExtension.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = SoDoItWidgetExtension.entitlements; sourceTree = "<group>"; };
 		F52351BA2F1CC20A006BDA04 /* SoDoIt.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SoDoIt.app; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
+/* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
+		F50FAB3C2F9CBB5400A5BF6E /* Exceptions for "SoDoItWidget" folder in "SoDoItWidgetExtension" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				Info.plist,
+			);
+			target = F50FAB262F9CBB5300A5BF6E /* SoDoItWidgetExtension */;
+		};
+/* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
+
 /* Begin PBXFileSystemSynchronizedRootGroup section */
+		F50FAB2D2F9CBB5300A5BF6E /* SoDoItWidget */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (
+				F50FAB3C2F9CBB5400A5BF6E /* Exceptions for "SoDoItWidget" folder in "SoDoItWidgetExtension" target */,
+			);
+			path = SoDoItWidget;
+			sourceTree = "<group>";
+		};
 		F52351BC2F1CC20A006BDA04 /* SoDoIt */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
 			path = SoDoIt;
@@ -19,6 +71,15 @@
 /* End PBXFileSystemSynchronizedRootGroup section */
 
 /* Begin PBXFrameworksBuildPhase section */
+		F50FAB242F9CBB5300A5BF6E /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				F50FAB2C2F9CBB5300A5BF6E /* SwiftUI.framework in Frameworks */,
+				F50FAB2A2F9CBB5300A5BF6E /* WidgetKit.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		F52351B72F1CC20A006BDA04 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
@@ -29,10 +90,22 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		F50FAB282F9CBB5300A5BF6E /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				F50FAB292F9CBB5300A5BF6E /* WidgetKit.framework */,
+				F50FAB2B2F9CBB5300A5BF6E /* SwiftUI.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
 		F52351B12F1CC20A006BDA04 = {
 			isa = PBXGroup;
 			children = (
+				F50FABD42F9CD52700A5BF6E /* SoDoItWidgetExtension.entitlements */,
 				F52351BC2F1CC20A006BDA04 /* SoDoIt */,
+				F50FAB2D2F9CBB5300A5BF6E /* SoDoItWidget */,
+				F50FAB282F9CBB5300A5BF6E /* Frameworks */,
 				F52351BB2F1CC20A006BDA04 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -41,6 +114,7 @@
 			isa = PBXGroup;
 			children = (
 				F52351BA2F1CC20A006BDA04 /* SoDoIt.app */,
+				F50FAB272F9CBB5300A5BF6E /* SoDoItWidgetExtension.appex */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -48,6 +122,28 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
+		F50FAB262F9CBB5300A5BF6E /* SoDoItWidgetExtension */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = F50FAB3D2F9CBB5400A5BF6E /* Build configuration list for PBXNativeTarget "SoDoItWidgetExtension" */;
+			buildPhases = (
+				F50FAB232F9CBB5300A5BF6E /* Sources */,
+				F50FAB242F9CBB5300A5BF6E /* Frameworks */,
+				F50FAB252F9CBB5300A5BF6E /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			fileSystemSynchronizedGroups = (
+				F50FAB2D2F9CBB5300A5BF6E /* SoDoItWidget */,
+			);
+			name = SoDoItWidgetExtension;
+			packageProductDependencies = (
+			);
+			productName = SoDoItWidgetExtension;
+			productReference = F50FAB272F9CBB5300A5BF6E /* SoDoItWidgetExtension.appex */;
+			productType = "com.apple.product-type.app-extension";
+		};
 		F52351B92F1CC20A006BDA04 /* SoDoIt */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = F52351C52F1CC20B006BDA04 /* Build configuration list for PBXNativeTarget "SoDoIt" */;
@@ -55,10 +151,12 @@
 				F52351B62F1CC20A006BDA04 /* Sources */,
 				F52351B72F1CC20A006BDA04 /* Frameworks */,
 				F52351B82F1CC20A006BDA04 /* Resources */,
+				F50FAB402F9CBB5400A5BF6E /* Embed Foundation Extensions */,
 			);
 			buildRules = (
 			);
 			dependencies = (
+				F50FAB3A2F9CBB5400A5BF6E /* PBXTargetDependency */,
 			);
 			fileSystemSynchronizedGroups = (
 				F52351BC2F1CC20A006BDA04 /* SoDoIt */,
@@ -77,9 +175,12 @@
 			isa = PBXProject;
 			attributes = {
 				BuildIndependentTargetsInParallel = 1;
-				LastSwiftUpdateCheck = 2620;
+				LastSwiftUpdateCheck = 2640;
 				LastUpgradeCheck = 2620;
 				TargetAttributes = {
+					F50FAB262F9CBB5300A5BF6E = {
+						CreatedOnToolsVersion = 26.4.1;
+					};
 					F52351B92F1CC20A006BDA04 = {
 						CreatedOnToolsVersion = 26.2;
 					};
@@ -100,11 +201,19 @@
 			projectRoot = "";
 			targets = (
 				F52351B92F1CC20A006BDA04 /* SoDoIt */,
+				F50FAB262F9CBB5300A5BF6E /* SoDoItWidgetExtension */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXResourcesBuildPhase section */
+		F50FAB252F9CBB5300A5BF6E /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		F52351B82F1CC20A006BDA04 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -115,6 +224,13 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
+		F50FAB232F9CBB5300A5BF6E /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		F52351B62F1CC20A006BDA04 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -124,7 +240,79 @@
 		};
 /* End PBXSourcesBuildPhase section */
 
+/* Begin PBXTargetDependency section */
+		F50FAB3A2F9CBB5400A5BF6E /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = F50FAB262F9CBB5300A5BF6E /* SoDoItWidgetExtension */;
+			targetProxy = F50FAB392F9CBB5400A5BF6E /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
 /* Begin XCBuildConfiguration section */
+		F50FAB3E2F9CBB5400A5BF6E /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				ASSETCATALOG_COMPILER_WIDGET_BACKGROUND_COLOR_NAME = WidgetBackground;
+				CODE_SIGN_ENTITLEMENTS = SoDoItWidgetExtension.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = XYC727LR27;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = SoDoItWidget/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = SoDoItWidget;
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				IPHONEOS_DEPLOYMENT_TARGET = 26.2;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = sso.SoDoIt.SoDoItWidget;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 6.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		F50FAB3F2F9CBB5400A5BF6E /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				ASSETCATALOG_COMPILER_WIDGET_BACKGROUND_COLOR_NAME = WidgetBackground;
+				CODE_SIGN_ENTITLEMENTS = SoDoItWidgetExtension.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = XYC727LR27;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = SoDoItWidget/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = SoDoItWidget;
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				IPHONEOS_DEPLOYMENT_TARGET = 26.2;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = sso.SoDoIt.SoDoItWidget;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 6.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
 		F52351C32F1CC20B006BDA04 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -251,11 +439,13 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = SoDoIt/SoDoIt.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = XYC727LR27;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.lifestyle";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
@@ -283,11 +473,13 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = SoDoIt/SoDoIt.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = XYC727LR27;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.lifestyle";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
@@ -313,6 +505,15 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
+		F50FAB3D2F9CBB5400A5BF6E /* Build configuration list for PBXNativeTarget "SoDoItWidgetExtension" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				F50FAB3E2F9CBB5400A5BF6E /* Debug */,
+				F50FAB3F2F9CBB5400A5BF6E /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
 		F52351B52F1CC20A006BDA04 /* Build configuration list for PBXProject "SoDoIt" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (

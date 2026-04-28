@@ -131,6 +131,7 @@ final class TodoListViewModel: NSObject, NSFetchedResultsControllerDelegate {
                     for: todo.id, title: todo.title, dueDate: dueDate
                 )
             }
+            WidgetDataManager.shared.updateWidgetData()
         } catch {
             activeError = .toggle
             Logger(subsystem: Bundle.main.bundleIdentifier ?? "sso.SoDoIt", category: "TodoListViewModel").error("완료 상태 변경 실패: \(error)")
@@ -142,6 +143,7 @@ final class TodoListViewModel: NSObject, NSFetchedResultsControllerDelegate {
         do {
             try repository.deleteTodo(todo)
             NotificationManager.shared.cancelNotification(for: todoID)
+            WidgetDataManager.shared.updateWidgetData()
         } catch {
             activeError = .delete
             Logger(subsystem: Bundle.main.bundleIdentifier ?? "sso.SoDoIt", category: "TodoListViewModel").error("할 일 삭제 실패: \(error)")

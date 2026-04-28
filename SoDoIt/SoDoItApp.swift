@@ -17,6 +17,9 @@ struct SoDoItApp: App {
             ContentView()
                 .environment(\.managedObjectContext, coreDataManager.viewContext)
                 .dismissKeyboardOnTap()
+                .onAppear {
+                    WidgetDataManager.shared.updateWidgetData()
+                }
         }
     }
 }
