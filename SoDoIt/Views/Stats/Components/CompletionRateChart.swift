@@ -35,7 +35,7 @@ struct CompletionRateChart: View {
     var body: some View {
         VStack(alignment: .leading, spacing: 12) {
             Text("완료율")
-                .font(.headline)
+                .font(.pretendard(.headline, weight: .semibold))
 
             HStack(spacing: 20) {
                 chart
@@ -64,7 +64,7 @@ struct CompletionRateChart: View {
                 Circle()
                     .stroke(Color(.systemGray5), lineWidth: 18)
                 Text("0%")
-                    .font(.title2.bold())
+                    .font(.pretendard(.title2, weight: .bold))
                     .foregroundStyle(.secondary)
             }
         } else {
@@ -80,10 +80,10 @@ struct CompletionRateChart: View {
             .chartBackground { _ in
                 VStack(spacing: 2) {
                     Text(rateText)
-                        .font(.title2.bold())
+                        .font(.pretendard(.title2, weight: .bold))
                         .monospacedDigit()
                     Text("완료")
-                        .font(.caption)
+                        .font(.pretendard(.caption))
                         .foregroundStyle(.secondary)
                 }
             }
@@ -96,10 +96,10 @@ struct CompletionRateChart: View {
                 .fill(segment.color)
                 .frame(width: 10, height: 10)
             Text(segment.label)
-                .font(.subheadline)
+                .font(.pretendard(.subheadline))
             Spacer(minLength: 8)
             Text("\(segment.count)")
-                .font(.subheadline.monospacedDigit())
+                .font(.pretendard(.subheadline).monospacedDigit())
                 .foregroundStyle(.secondary)
         }
     }

@@ -17,16 +17,15 @@ struct StatSummaryCard: View {
         VStack(alignment: .leading, spacing: 8) {
             HStack(spacing: 6) {
                 Image(systemName: systemImage)
-                    .font(.subheadline)
+                    .font(.pretendard(.subheadline))
                     .foregroundStyle(tint)
                 Text(title)
-                    .font(.subheadline)
+                    .font(.pretendard(.subheadline))
                     .foregroundStyle(.secondary)
             }
 
             Text(value)
-                .font(.title2)
-                .fontWeight(.semibold)
+                .font(.pretendard(.title2, weight: .semibold))
                 .foregroundStyle(.primary)
                 .contentTransition(.numericText())
         }

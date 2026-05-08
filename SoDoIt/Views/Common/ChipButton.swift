@@ -18,9 +18,9 @@ struct ChipButton: View {
         Button(action: action) {
             HStack(spacing: 4) {
                 Image(systemName: icon)
-                    .font(.caption)
+                    .font(.pretendard(.caption))
                 Text(label)
-                    .font(.subheadline)
+                    .font(.pretendard(.subheadline))
             }
             .padding(.horizontal, 12)
             .padding(.vertical, 6)

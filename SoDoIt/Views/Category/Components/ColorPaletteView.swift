@@ -37,7 +37,7 @@ struct ColorPaletteView: View {
                 .overlay {
                     if selectedHex == preset.hex {
                         Image(systemName: "checkmark")
-                            .font(.caption.bold())
+                            .font(.pretendard(.caption, weight: .bold))
                             .foregroundStyle(.white)
                     }
                 }
