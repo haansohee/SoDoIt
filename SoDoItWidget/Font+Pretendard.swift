@@ -10,12 +10,24 @@ import CoreText
 import SwiftUI
 
 enum PretendardFont {
+    @MainActor private static var didRegister = false
+
+    @MainActor
     static func registerAll() {
-        ["Pretendard-Thin", "Pretendard-Regular", "Pretendard-SemiBold", "Pretendard-Bold"]
-            .forEach { name in
-                guard let url = Bundle.main.url(forResource: name, withExtension: "ttf") else { return }
-                CTFontManagerRegisterFontsForURL(url as CFURL, .process, nil)
+        guard !didRegister else { return }
+        didRegister = true
+
+        for name in ["Pretendard-Thin", "Pretendard-Regular", "Pretendard-SemiBold", "Pretendard-Bold"] {
+            guard let url = Bundle.main.url(forResource: name, withExtension: "ttf") else {
+                assertionFailure("Pretendard font missing from bundle: \(name).ttf")
+                continue
             }
+            var error: Unmanaged<CFError>?
+            if !CTFontManagerRegisterFontsForURL(url as CFURL, .process, &error) {
+                let description = error?.takeRetainedValue().localizedDescription ?? "unknown error"
+                assertionFailure("Failed to register Pretendard font \(name): \(description)")
+            }
+        }
     }
 }
 
