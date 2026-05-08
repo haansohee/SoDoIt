@@ -13,6 +13,16 @@ struct TodoRowView: View {
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
 
     var body: some View {
+        // 삭제 직후 KVO가 ForEach 배열 갱신보다 먼저 발화하면
+        // non-optional @NSManaged 프로퍼티 접근에서 크래시가 나므로 가드한다.
+        if todo.isDeleted || todo.managedObjectContext == nil {
+            EmptyView()
+        } else {
+            content
+        }
+    }
+
+    private var content: some View {
         HStack(spacing: 12) {
             // 우선순위 인디케이터
             Circle()

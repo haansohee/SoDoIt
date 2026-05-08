@@ -22,7 +22,11 @@ struct CategoryRowView: View {
     }
 
     var body: some View {
-        if isEditing {
+        // 삭제 직후 KVO가 ForEach 배열 갱신보다 먼저 발화하면
+        // non-optional @NSManaged 프로퍼티 접근에서 크래시가 나므로 가드한다.
+        if category.isDeleted || category.managedObjectContext == nil {
+            EmptyView()
+        } else if isEditing {
             editingView
         } else {
             displayView
