@@ -77,7 +77,7 @@ struct TodoWidgetEntryView: View {
 
             if entry.todos.isEmpty {
                 Spacer()
-                Text(entry.stats.totalCount > 0 ? "모든 할 일을 완���했습니다!" : "진행 중인 할 일이 없습니다")
+                Text(entry.stats.totalCount > 0 ? "모든 할 일을 완료했습니다!" : "진행 중인 할 일이 없습니다")
                     .font(.pretendard(.subheadline))
                     .foregroundStyle(.secondary)
                     .frame(maxWidth: .infinity)

@@ -2,6 +2,9 @@
 //  Font+Pretendard.swift
 //  SoDoItWidget
 //
+//  NOTE: SoDoIt/Extensions/Font+Pretendard.swift의 복사본입니다.
+//  두 파일의 정의를 동일하게 유지해야 합니다.
+//
 
 import CoreText
 import SwiftUI
