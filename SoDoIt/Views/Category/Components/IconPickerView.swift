@@ -34,7 +34,7 @@ struct IconPickerView: View {
             selectedIcon = icon.symbol
         } label: {
             Image(systemName: icon.symbol)
-                .font(.title3)
+                .font(.pretendard(.title3))
                 .frame(minWidth: 44, minHeight: 44)
                 .contentShape(Rectangle())
                 .background(

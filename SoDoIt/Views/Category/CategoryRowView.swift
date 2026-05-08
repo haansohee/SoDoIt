@@ -40,7 +40,7 @@ struct CategoryRowView: View {
             HStack(spacing: 10) {
                 Image(systemName: category.iconName)
                     .foregroundStyle(Color(hex: category.colorHex) ?? .gray)
-                    .font(.title3)
+                    .font(.pretendard(.title3))
                     .frame(width: 28)
                 
                 Text(category.name)
@@ -49,7 +49,7 @@ struct CategoryRowView: View {
                 Spacer()
                 
                 Text("\(category.activeTodoCount)")
-                    .font(.subheadline)
+                    .font(.pretendard(.subheadline))
                     .foregroundStyle(.secondary)
             }
         }

@@ -18,7 +18,7 @@ struct WeeklyCompletionChart: View {
     var body: some View {
         VStack(alignment: .leading, spacing: 12) {
             Text("주간 완료 추이")
-                .font(.headline)
+                .font(.pretendard(.headline, weight: .semibold))
 
             Chart {
                 ForEach(data, id: \.date) { item in

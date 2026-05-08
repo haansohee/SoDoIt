@@ -32,17 +32,17 @@ struct TodoWidgetEntryView: View {
                 Image(systemName: "checklist")
                     .foregroundStyle(Color.accentColor)
                 Text("할 일")
-                    .font(.headline)
+                    .font(.pretendard(.headline, weight: .semibold))
                 Spacer()
                 Text("\(entry.stats.completedCount)/\(entry.stats.totalCount)")
-                    .font(.caption)
+                    .font(.pretendard(.caption))
                     .foregroundStyle(.secondary)
             }
 
             if entry.todos.isEmpty {
                 Spacer()
                 Text(entry.stats.totalCount > 0 ? "모든 할 일을 완료했습니다!" : "진행 중인 할 일이 없습니다")
-                    .font(.caption)
+                    .font(.pretendard(.caption))
                     .foregroundStyle(.secondary)
                     .frame(maxWidth: .infinity)
                 Spacer()
@@ -63,22 +63,22 @@ struct TodoWidgetEntryView: View {
                 Image(systemName: "checklist")
                     .foregroundStyle(Color.accentColor)
                 Text("오늘의 할 일")
-                    .font(.headline)
+                    .font(.pretendard(.headline, weight: .semibold))
                 Spacer()
                 VStack(alignment: .trailing, spacing: 2) {
                     Text("오늘 완료 \(entry.stats.todayCount)개")
-                        .font(.caption2)
+                        .font(.pretendard(.caption2))
                         .foregroundStyle(.secondary)
                     Text("\(entry.stats.completedCount)/\(entry.stats.totalCount)")
-                        .font(.caption)
+                        .font(.pretendard(.caption))
                         .foregroundStyle(.secondary)
                 }
             }
 
             if entry.todos.isEmpty {
                 Spacer()
-                Text(entry.stats.totalCount > 0 ? "모든 할 일을 완���했습니다!" : "진행 중인 할 일이 없습니다")
-                    .font(.subheadline)
+                Text(entry.stats.totalCount > 0 ? "모든 할 일을 완료했습니다!" : "진행 중인 할 일이 없습니다")
+                    .font(.pretendard(.subheadline))
                     .foregroundStyle(.secondary)
                     .frame(maxWidth: .infinity)
                 Spacer()
@@ -99,12 +99,12 @@ struct TodoWidgetEntryView: View {
                 .fill(priorityColor(todo.priority))
                 .frame(width: 6, height: 6)
             Text(todo.title)
-                .font(.caption)
+                .font(.pretendard(.caption))
                 .lineLimit(1)
             Spacer(minLength: 4)
             if let dueDate = todo.dueDate {
                 Text(dueDate, format: .dateTime.hour().minute())
-                    .font(.caption2)
+                    .font(.pretendard(.caption2))
                     .foregroundStyle(.secondary)
             }
         }

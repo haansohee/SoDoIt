@@ -10,6 +10,10 @@ import SwiftUI
 
 @main
 struct SoDoItWidgetBundle: WidgetBundle {
+    init() {
+        PretendardFont.registerAll()
+    }
+
     var body: some Widget {
         TodoListWidget()
     }

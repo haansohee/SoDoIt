@@ -71,7 +71,7 @@ struct TodoRowView: View {
         }
         
         return Label(date.formatted(.dateTime.month().day()), systemImage: "calendar")
-            .font(.caption)
+            .font(.pretendard(.caption))
             .foregroundStyle(color)
     }
     
@@ -80,7 +80,7 @@ struct TodoRowView: View {
         let badgeColor = Color(hex: category.colorHex) ?? .gray
         
         return Label(category.name, systemImage: category.iconName)
-            .font(.caption)
+            .font(.pretendard(.caption))
             .foregroundStyle(badgeColor)
     }
 }

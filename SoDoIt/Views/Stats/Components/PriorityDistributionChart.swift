@@ -18,7 +18,7 @@ struct PriorityDistributionChart: View {
     var body: some View {
         VStack(alignment: .leading, spacing: 12) {
             Text("우선순위별 분포")
-                .font(.headline)
+                .font(.pretendard(.headline, weight: .semibold))
 
             if total == 0 {
                 emptyState
@@ -32,7 +32,7 @@ struct PriorityDistributionChart: View {
                         .foregroundStyle(item.priority.color.gradient)
                         .annotation(position: .trailing, alignment: .leading) {
                             Text("\(item.count)")
-                                .font(.caption)
+                                .font(.pretendard(.caption))
                                 .foregroundStyle(.secondary)
                         }
                         .cornerRadius(4)
@@ -58,11 +58,11 @@ struct PriorityDistributionChart: View {
     private var emptyState: some View {
         VStack(spacing: 8) {
             Image(systemName: "chart.bar.xaxis")
-                .font(.title2)
+                .font(.pretendard(.title2))
                 .foregroundStyle(.secondary)
                 .accessibilityHidden(true)
             Text("등록된 할 일이 없습니다")
-                .font(.subheadline)
+                .font(.pretendard(.subheadline))
                 .foregroundStyle(.secondary)
         }
         .frame(maxWidth: .infinity, minHeight: 140)
