@@ -12,9 +12,9 @@ struct ColorPaletteView: View {
     
     static let presetColors: [(name: String, hex: String)] = [
         ("빨강", "#FF3B30"), ("주황", "#FF9500"), ("노랑", "#FFCC00"),
-                  ("초록", "#34C759"), ("민트", "#00C7BE"), ("파랑", "#007AFF"),
-                  ("남색", "#5856D6"), ("보라", "#AF52DE"), ("분홍", "#FF2D55"),
-                  ("갈색", "#A2845E")
+        ("초록", "#34C759"), ("청록", "#30B0C7"), ("파랑", "#007AFF"),
+        ("남색", "#5856D6"), ("보라", "#AF52DE"), ("분홍", "#FF2D8E"),
+        ("갈색", "#8B5A2B")
     ]
     private let columns = Array(repeating: GridItem(.flexible(), spacing: 12), count: 5)
     
