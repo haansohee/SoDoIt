@@ -167,7 +167,9 @@ struct TodoListView: View {
     }
 
     private func todoRows<T: RandomAccessCollection>(_ todos: T) -> some View where T.Element == TodoItem {
-        ForEach(todos) { todo in
+        // id: \.objectID — TodoItem의 @NSManaged id(UUID)는 삭제 후 KVC가
+        // nil을 반환하며 ForEach diffing 시점에 크래시. objectID 사용 시 안전.
+        ForEach(todos, id: \.objectID) { todo in
             NavigationLink(value: todo.objectID) {
                 TodoRowView(todo: todo)
             }

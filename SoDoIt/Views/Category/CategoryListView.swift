@@ -57,7 +57,10 @@ struct CategoryListView: View {
     // MARK: - 카테고리 목록
     private var categoryList: some View {
         List {
-            ForEach(categoryListViewModel.categories) { category in
+            // id: \.objectID — Identifiable의 @NSManaged id(UUID)는 삭제된
+            // 객체에서 KVC가 nil을 반환하며 ForEach diffing 시점에 크래시.
+            // objectID는 삭제 후에도 안전 접근 가능.
+            ForEach(categoryListViewModel.categories, id: \.objectID) { category in
                 CategoryRowView(category: category) { name, colorHex, iconName in
                     categoryListViewModel.updateCategory(
                         category,

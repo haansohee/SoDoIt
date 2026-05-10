@@ -23,7 +23,7 @@ struct CategoryFilterBar: View {
                     onSelect(nil)
                 }
 
-                ForEach(categories) { category in
+                ForEach(categories, id: \.objectID) { category in
                     ChipButton(
                         label: category.name,
                         icon: category.iconName,
