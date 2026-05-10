@@ -9,11 +9,12 @@ import SwiftUI
 import CoreData
 
 struct CategoryRowView: View {
-    // @ObservedObject를 사용하면 삭제 시 KVO 발화가 SwiftUI 리렌더와 얽혀
-    // ForEach 배열 갱신보다 먼저 일어나며 deleted 객체의 @NSManaged 프로퍼티
-    // 접근에서 크래시. FRC 델리게이트가 배열을 갱신할 때 부모 리렌더로 자연스럽게
-    // 행이 갱신되므로 일반 프로퍼티로 충분하다.
-    let category: Category
+    // 편집 시 갱신을 위해 @ObservedObject로 KVO를 구독한다.
+    // 일반 let 프로퍼티만 두면 부모 리렌더 시에도 동일 참조라 body 재평가를
+    // 건너뛰어 편집 결과가 반영되지 않음.
+    // 삭제 시 race로 인한 크래시는 (1) body 진입의 isDeleted 가드와
+    // (2) ForEach의 id: \.objectID로 차단.
+    @ObservedObject var category: Category
     var onUpdate: (String, String, String) -> Void
     
     @State private var isEditing = false

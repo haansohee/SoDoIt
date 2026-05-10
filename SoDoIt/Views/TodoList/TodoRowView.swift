@@ -9,9 +9,9 @@ import SwiftUI
 import CoreData
 
 struct TodoRowView: View {
-    // @ObservedObject를 빼고 일반 프로퍼티로 둔다. 자세한 사유는
-    // CategoryRowView의 동일 주석 참고.
-    let todo: TodoItem
+    // 편집/토글 시 갱신을 위해 @ObservedObject로 KVO를 구독.
+    // 자세한 사유는 CategoryRowView의 동일 주석 참고.
+    @ObservedObject var todo: TodoItem
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
 
     var body: some View {
