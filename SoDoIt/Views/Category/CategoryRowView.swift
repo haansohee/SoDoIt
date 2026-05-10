@@ -9,11 +9,6 @@ import SwiftUI
 import CoreData
 
 struct CategoryRowView: View {
-    // 편집 시 갱신을 위해 @ObservedObject로 KVO를 구독한다.
-    // 일반 let 프로퍼티만 두면 부모 리렌더 시에도 동일 참조라 body 재평가를
-    // 건너뛰어 편집 결과가 반영되지 않음.
-    // 삭제 시 race로 인한 크래시는 (1) body 진입의 isDeleted 가드와
-    // (2) ForEach의 id: \.objectID로 차단.
     @ObservedObject var category: Category
     var onUpdate: (String, String, String) -> Void
     
@@ -27,8 +22,6 @@ struct CategoryRowView: View {
     }
 
     var body: some View {
-        // 삭제 직후 KVO가 ForEach 배열 갱신보다 먼저 발화하면
-        // non-optional @NSManaged 프로퍼티 접근에서 크래시가 나므로 가드한다.
         if category.isDeleted || category.managedObjectContext == nil {
             EmptyView()
         } else if isEditing {
