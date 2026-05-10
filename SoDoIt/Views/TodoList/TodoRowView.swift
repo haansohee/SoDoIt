@@ -9,14 +9,10 @@ import SwiftUI
 import CoreData
 
 struct TodoRowView: View {
-    // @ObservedObject를 빼고 일반 프로퍼티로 둔다. 자세한 사유는
-    // CategoryRowView의 동일 주석 참고.
-    let todo: TodoItem
+    @ObservedObject var todo: TodoItem
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
 
     var body: some View {
-        // 삭제 직후 KVO가 ForEach 배열 갱신보다 먼저 발화하면
-        // non-optional @NSManaged 프로퍼티 접근에서 크래시가 나므로 가드한다.
         if todo.isDeleted || todo.managedObjectContext == nil {
             EmptyView()
         } else {

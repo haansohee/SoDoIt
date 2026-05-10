@@ -9,11 +9,7 @@ import SwiftUI
 import CoreData
 
 struct CategoryRowView: View {
-    // @ObservedObject를 사용하면 삭제 시 KVO 발화가 SwiftUI 리렌더와 얽혀
-    // ForEach 배열 갱신보다 먼저 일어나며 deleted 객체의 @NSManaged 프로퍼티
-    // 접근에서 크래시. FRC 델리게이트가 배열을 갱신할 때 부모 리렌더로 자연스럽게
-    // 행이 갱신되므로 일반 프로퍼티로 충분하다.
-    let category: Category
+    @ObservedObject var category: Category
     var onUpdate: (String, String, String) -> Void
     
     @State private var isEditing = false
@@ -26,8 +22,6 @@ struct CategoryRowView: View {
     }
 
     var body: some View {
-        // 삭제 직후 KVO가 ForEach 배열 갱신보다 먼저 발화하면
-        // non-optional @NSManaged 프로퍼티 접근에서 크래시가 나므로 가드한다.
         if category.isDeleted || category.managedObjectContext == nil {
             EmptyView()
         } else if isEditing {
