@@ -1,0 +1,193 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>SoDoIt 지원</title>
+<meta name="description" content="SoDoIt(쏘두잇) 앱 지원 페이지 — 문의, 자주 묻는 질문, 개인정보 처리방침." />
+<link rel="stylesheet" as="style" crossorigin
+      href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css" />
+<style>
+:root {
+  --indigo: #4263EB;
+  --indigo-deep: #2F48C3;
+  --bg: #F5F7FF;
+  --text: #1C1E40;
+  --muted: #6B7390;
+  --card: #FFFFFF;
+  --border: #E4E8F5;
+}
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #0F1224;
+    --text: #E6E8F5;
+    --muted: #9098B5;
+    --card: #1A1E36;
+    --border: #2A2F4A;
+  }
+}
+* { box-sizing: border-box; }
+html, body {
+  margin: 0; padding: 0;
+  background: var(--bg);
+  color: var(--text);
+  font-family: "Pretendard Variable", Pretendard, -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
+  font-size: 16px;
+  line-height: 1.65;
+  -webkit-font-smoothing: antialiased;
+}
+.container {
+  max-width: 720px;
+  margin: 0 auto;
+  padding: 56px 24px 96px;
+}
+header {
+  text-align: center;
+  margin-bottom: 48px;
+}
+.brand {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  font-size: 28px;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+}
+.brand-mark {
+  width: 56px; height: 56px;
+  border-radius: 14px;
+  background: linear-gradient(135deg, #5A79FF 0%, var(--indigo) 50%, var(--indigo-deep) 100%);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: #fff;
+  font-weight: 800;
+  font-size: 24px;
+  box-shadow: 0 10px 24px rgba(66,99,235,.25);
+}
+.tagline {
+  margin-top: 12px;
+  color: var(--muted);
+  font-size: 15px;
+}
+section {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 28px 28px;
+  margin-bottom: 20px;
+}
+section h2 {
+  font-size: 19px;
+  font-weight: 700;
+  margin: 0 0 16px;
+  letter-spacing: -0.01em;
+}
+section p {
+  margin: 0 0 12px;
+  color: var(--text);
+}
+section p.muted {
+  color: var(--muted);
+  font-size: 14px;
+}
+a {
+  color: var(--indigo);
+  text-decoration: none;
+  font-weight: 600;
+}
+a:hover { text-decoration: underline; }
+.email {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: rgba(66,99,235,.08);
+  padding: 10px 16px;
+  border-radius: 10px;
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--indigo);
+}
+.faq {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.faq li {
+  padding: 14px 0;
+  border-top: 1px solid var(--border);
+}
+.faq li:first-child { border-top: none; padding-top: 0; }
+.faq .q {
+  font-weight: 600;
+  color: var(--text);
+  margin-bottom: 4px;
+}
+.faq .a {
+  color: var(--muted);
+  font-size: 15px;
+}
+footer {
+  text-align: center;
+  color: var(--muted);
+  font-size: 13px;
+  margin-top: 40px;
+}
+footer a { color: var(--muted); }
+</style>
+</head>
+<body>
+<div class="container">
+
+  <header>
+    <div class="brand">
+      <span class="brand-mark">S</span>
+      <span>SoDoIt</span>
+    </div>
+    <div class="tagline">오늘의 할 일을 가볍게 시작해 깔끔하게 마치기</div>
+  </header>
+
+  <section>
+    <h2>문의</h2>
+    <p>버그 제보·기능 제안·기타 문의는 아래 이메일로 보내주세요. 보통 1~2일 내에 답변드립니다.</p>
+    <p><a class="email" href="mailto:balobonae@gmail.com">balobonae@gmail.com</a></p>
+  </section>
+
+  <section>
+    <h2>자주 묻는 질문</h2>
+    <ul class="faq">
+      <li>
+        <div class="q">데이터는 어디에 저장되나요?</div>
+        <div class="a">모든 할 일·카테고리 데이터는 기기 내부에만 저장됩니다. 외부 서버로 전송되지 않습니다.</div>
+      </li>
+      <li>
+        <div class="q">백업이나 기기 간 동기화가 되나요?</div>
+        <div class="a">현재 버전은 동기화를 지원하지 않습니다. iCloud 동기화는 추후 업데이트로 검토 중입니다.</div>
+      </li>
+      <li>
+        <div class="q">마감일 알림이 오지 않아요</div>
+        <div class="a">iOS 설정 → 알림 → SoDoIt에서 알림 허용이 켜져 있는지 확인해 주세요. 마감 시각은 분 단위까지 정확히 설정해야 알림이 도착합니다.</div>
+      </li>
+      <li>
+        <div class="q">위젯이 갱신되지 않아요</div>
+        <div class="a">홈 화면 위젯은 iOS 시스템 정책에 따라 갱신 주기가 결정됩니다. 보통 몇 분 안에 반영되며, 즉시 갱신이 필요하면 앱을 한 번 실행해 주세요.</div>
+      </li>
+      <li>
+        <div class="q">카테고리를 삭제하면 그 안의 할 일도 사라지나요?</div>
+        <div class="a">아니요. 카테고리만 사라지고 해당 할 일은 카테고리 없는 상태로 보존됩니다.</div>
+      </li>
+    </ul>
+  </section>
+
+  <section>
+    <h2>법적 고지</h2>
+    <p><a href="./privacy.html">개인정보 처리방침 →</a></p>
+  </section>
+
+  <footer>
+    © 2026 SoDoIt &middot; <a href="./privacy.html">개인정보 처리방침</a>
+  </footer>
+
+</div>
+</body>
+</html>
