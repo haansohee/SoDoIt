@@ -38,13 +38,19 @@ xcodebuild -project SoDoIt.xcodeproj -scheme SoDoIt clean build \
 ## Git 전략 (Git Flow)
 
 ```
-main ← 프로덕션 (.gitignore만 관리)
-├── develop ← 통합 브랜치
-├── release ← 릴리스 후보
-└── feature/* ← 기능 브랜치 (develop에서 분기)
+main ← 프로덕션 (release에서 머지로만 갱신, App Store 출시 버전과 일치)
+├── develop ← 통합 브랜치 (feature가 머지되는 곳)
+├── release ← 릴리스 후보 (develop에서 머지, QA 완료 후 main으로 승격)
+├── feature/* ← 기능 브랜치 (develop에서 분기)
+├── fix/* ← 버그 수정 브랜치 (develop에서 분기)
+└── hotfix/* ← 긴급 수정 (main에서 분기 → main·develop 양쪽 머지)
 ```
 
-커밋 컨벤션: `feat:`, `fix:`, `refactor:`, `docs:` 접두사 사용.
+v1.0(2026-05) 출시를 기점으로 main은 production 상태를 반영하도록 변경됨.
+이전에는 `.gitignore`만 관리했으나 표준 Git Flow에 맞춰 release → main 머지로 갱신.
+
+커밋 컨벤션: `feat:`, `fix:`, `refactor:`, `docs:`, `chore:` 접두사 사용.
+릴리스 시점에는 main에 `v{X.Y.Z}` 태그 부여.
 
 ## 프로젝트 설정
 
